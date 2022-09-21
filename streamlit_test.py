@@ -6,6 +6,8 @@ st.set_page_config(page_title="Amazon orders", layout="wide")
 
 file = st.file_uploader("Drag and drop a file")
 
+
+
 try:
     data = pd.read_csv(file)
 except:
@@ -59,4 +61,4 @@ try:
 
     st.dataframe(data_selection)
 except:
-    pass
+    print("Upload a file")
