@@ -21,6 +21,8 @@ cols = data.columns.to_list()
 for i in range(len(cols)):
     cols[i] = cols[i].replace(" ", "_")
 
+data['Order_Status'] = [i.replace("Canceled","Cancelled") for i in data['Order_Status']]
+
 data.columns = cols
 
 #SIDEBAR
@@ -41,13 +43,28 @@ data_selection = data_selection[columns]
 if len(group_by) == 0:
     data_groupby = pd.DataFrame
 else:
-    data_groupby = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']].sort_values(by='Qty', ascending= False)
+    data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
+    data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
+    data_temp2 = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']].sort_values(by='Qty', ascending= False)
+    data_temp2 = data_temp2.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
+    data_temp2['Total Sold Qty'] = data_temp1['Total Qty']
+    data_temp2['Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
+    #data_temp2['Qty %'] =
+    #data_temp2['USD %'] =
+
+    #new_row = [data_temp2[i].sum() for i in data_temp2.columns]
+    #data_temp2.loc["Total"] = new_row
+
+    #data_temp2.style.format({'Qty': "{:.0f}", 'Revenue (USD)': "{:.2f}", 'Total Qty': "{:.0f}", 'Total Revenue (USD)': "{:.2f}"})
+
+    #print(data_temp2)
+
 
 st.markdown("---")
 
 try:
     st.subheader(f"Grouped by {group_by}")
-    st.dataframe(data_groupby)
+    st.dataframe(data_temp2)
 
     total_revenue = data_selection["Total_USD"].sum()
     total_revenue = int(total_revenue * 100) / 100
