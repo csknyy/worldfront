@@ -25,8 +25,9 @@ data.columns = cols
 
 #SIDEBAR
 
-st.sidebar.header("Filters")
+#st.sidebar.header("Filters")
 group_by = st.sidebar.multiselect("Group by",options = ['Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'], default = ['Channel'])
+st.sidebar.header("Filters")
 status = st.sidebar.multiselect("Order status",options = data["Order_Status"].unique(), default = data["Order_Status"].unique())
 columns = st.sidebar.multiselect("Columns",options = cols, default = cols)
 channel = st.sidebar.multiselect("Channel",options = data["Channel"].unique(), default = data["Channel"].unique())
@@ -61,10 +62,12 @@ with left_column:
 with middle_column:
     st.subheader("Total revenue")
     st.subheader(f"{total_revenue:,} USD")
-with right_column:
-    st.subheader("Average")
-    st.subheader(f"{average:,}")
+#with right_column:
+#    st.subheader("Average")
+#    st.subheader(f"{average:,}")
 
 st.markdown("---")
+
+st.subheader(f"Ungrouped")
 
 st.dataframe(data_selection)
