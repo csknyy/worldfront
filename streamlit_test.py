@@ -21,7 +21,10 @@ cols = data.columns.to_list()
 for i in range(len(cols)):
     cols[i] = cols[i].replace(" ", "_")
 
-data['Order_Status'] = [i.replace("Canceled","Cancelled") for i in data['Order_Status']]
+try:
+    data['Order_Status'] = [i.replace("Canceled","Cancelled") for i in data['Order_Status']]
+except:
+    pass
 
 data.columns = cols
 
