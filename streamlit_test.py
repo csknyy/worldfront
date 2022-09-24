@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import datetime
 
 st.set_page_config(page_title="Amazon orders", layout="wide")
 
@@ -15,23 +16,24 @@ try:
 except:
     data = pd.read_csv(url)
 
-#COLUMNS
 cols = data.columns.to_list()
 
 for i in range(len(cols)):
     cols[i] = cols[i].replace(" ", "_")
 
-try:
-    data['Order_Status'] = [i.replace("Canceled","Cancelled") for i in data['Order_Status']]
-except:
-    pass
-
 data.columns = cols
+
+data['Order_Status'] = [i.replace("Canceled", "Cancelled") for i in data['Order_Status']]
+
+data['Date'] = [datetime.datetime.strptime(i,'%d/%m/%Y %H:%M:%S') for i in data['Date_Purchased']]
+data['Date'] = [i.normalize() for i in data['Date']]
+
+cols = data.columns.to_list()
 
 #SIDEBAR
 
 #st.sidebar.header("Filters")
-group_by = st.sidebar.multiselect("Group by",options = ['Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'], default = ['Channel'])
+group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'], default = ['Date'])
 st.sidebar.markdown("---")
 st.sidebar.header("Filters")
 status = st.sidebar.multiselect("Order Status",options = data["Order_Status"].unique(), default = data["Order_Status"].unique())
@@ -43,31 +45,21 @@ pri_supplier = st.sidebar.multiselect("Priced at supplier",options = data["Price
 data_selection = data.query("Order_Status == @status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier")
 data_selection = data_selection[columns]
 
-if len(group_by) == 0:
-    data_groupby = pd.DataFrame
-else:
-    data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
-    data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
-    data_temp2 = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']].sort_values(by='Qty', ascending= False)
-    data_temp2 = data_temp2.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
-    data_temp2['Total Sold Qty'] = data_temp1['Total Qty']
-    data_temp2['Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
-    #data_temp2['Qty %'] =
-    #data_temp2['USD %'] =
 
-    #new_row = [data_temp2[i].sum() for i in data_temp2.columns]
-    #data_temp2.loc["Total"] = new_row
-
-    #data_temp2.style.format({'Qty': "{:.0f}", 'Revenue (USD)': "{:.2f}", 'Total Qty': "{:.0f}", 'Total Revenue (USD)': "{:.2f}"})
-
-    #print(data_temp2)
-
+data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
+data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
+data_temp2 = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']]
+data_temp2 = data_temp2.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
+data_temp2['Total Sold Qty'] = data_temp1['Total Qty']
+data_temp2['Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
+data_temp2 = data_temp2.reset_index().sort_values(by='Date',ascending=False)
 
 st.markdown("---")
 
 try:
     st.subheader(f"Grouped by {group_by}")
-    st.dataframe(data_temp2)
+
+    st.write(data_temp2)
 
     total_revenue = data_selection["Total_USD"].sum()
     total_revenue = int(total_revenue * 100) / 100
