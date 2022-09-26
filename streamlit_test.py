@@ -112,7 +112,7 @@ category_group = category_group.sort_values(by='Qty',ascending=False)
 barcode_group = data_selection.groupby(by='Barcode').sum()[['Qty','Total_USD']]
 barcode_group = barcode_group.sort_values(by='Qty',ascending=False)
 
-channel_group.plot(kind = 'barh')
+#channel_group.plot(kind = 'barh')
 
 left_column, middle_column, right_column = st.columns(3)
 with left_column:
