@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import datetime
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Amazon orders", layout="wide")
 
