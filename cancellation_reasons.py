@@ -27,6 +27,9 @@ for i in orders:
     response = requests.post(url,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
     url = response.text.split(' ')[-15][1:-4]
     response1 = requests.post(url,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
+
+    st.write(response1)
+
     temp = response1.text.split('Reason: ')[-1].split('&')[0].split("<br />")[0]
     date = response1.text.replace('&nbsp;',"").split('Canceled')[0].split('"axisDate">')[-1].split('</span>')[0].split(",")[1]
     date = datetime.datetime.strptime(date,'%d%b%Y%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
