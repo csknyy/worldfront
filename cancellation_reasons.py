@@ -21,31 +21,25 @@ reasons = []
 a = 0
 for i in orders:
     a = a + 1
-    #try:
-    data = {'username': 'coskun', 'password': 'vateMuny73'}
-    url = "https://all.worldfront.co/axis/orders.php?action=edit&oID="+str(i)
-    response = requests.post(url,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
-    url1 = response.text.split(' ')[-15][1:-4]
-    response1 = requests.post(url1,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
+    try:
+        data = {'username': 'coskun', 'password': 'vateMuny73'}
+        url = "https://all.worldfront.co/axis/orders.php?action=edit&oID="+str(i)
+        response = requests.post(url,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
+        url1 = response.text.split(' ')[-15][1:-4]
+        response1 = requests.post(url1,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
+        temp = response1.text.split('Reason: ')[-1].split('&')[0].split("<br />")[0]
+        date = response1.text.replace('&nbsp;',"").split('Canceled')[0].split('"axisDate">')[-1].split('</span>')[0].split(",")[1]
+        date = datetime.datetime.strptime(date,'%d%b%Y%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+        temp_reason = f'{a} done / {i} / {temp[:50]} / date: {date}'
+        print(temp_reason)
+        reasons.append(temp_reason)
+        loading.empty()
+        perc = str(f"{int(a*10000/len(orders))/100}% - {a} / {len(orders)}")
+        loading.subheader(perc)
 
-    st.write(url1)
-    st.write(response1.text)
-
-    temp = response1.text.split('Reason: ')[-1].split('&')[0].split("<br />")[0]
-    date = response1.text.replace('&nbsp;',"").split('Canceled')[0].split('"axisDate">')[-1].split('</span>')[0].split(",")[1]
-    date = datetime.datetime.strptime(date,'%d%b%Y%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
-    temp_reason = f'{a} done / {i} / {temp[:50]} / date: {date}'
-    print(temp_reason)
-    reasons.append(temp_reason)
-    loading.empty()
-    perc = str(f"{int(a*10000/len(orders))/100}% - {a} / {len(orders)}")
-    loading.subheader(perc)
-
-    #except:
-    #    print(f'{a} done - N/A')
-    #    reasons.append("N/A")
-
-st.write(reasons)
+    except:
+        print(f'{a} done - N/A')
+        reasons.append("N/A")
 
 reasons_df = pd.DataFrame()
 reasons_df['Order ID'] = [i.split(" / ")[1] for i in reasons]
