@@ -39,13 +39,32 @@ group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Catego
 #group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'])
 st.sidebar.markdown("---")
 st.sidebar.header("Filters")
-status = st.sidebar.multiselect("Order Status",options = data["Order_Status"].unique(), default = data["Order_Status"].unique())
-columns = st.sidebar.multiselect("Columns",options = cols, default = cols)
-channel = st.sidebar.multiselect("Channel",options = data["Channel"].unique(), default = data["Channel"].unique())
-supplier = st.sidebar.multiselect("Supplier",options = data["Supplier"].unique(), default = data["Supplier"].unique())
-pri_supplier = st.sidebar.multiselect("Priced at supplier",options = data["Priced_At_supplier"].unique(), default = data["Priced_At_supplier"].unique())
+status = st.sidebar.multiselect("Order Status",options = data["Order_Status"].unique())
+columns = st.sidebar.multiselect("Columns",options = cols)
+channel = st.sidebar.multiselect("Channel",options = data["Channel"].unique())
+supplier = st.sidebar.multiselect("Supplier",options = data["Supplier"].unique())
+pri_supplier = st.sidebar.multiselect("Priced at supplier",options = data["Priced_At_supplier"].unique())
+barcode = st.sidebar.multiselect("Barcode",options = data["Barcode"].unique())
 
-data_selection = data.query("Order_Status == @status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier")
+if len(status) == 0:
+    status = [i for i in data["Order_Status"].unique()]
+
+if len(columns) == 0:
+    columns = [i for i in cols]
+
+if len(channel) == 0:
+    channel = [i for i in data["Channel"].unique()]
+
+if len(supplier) == 0:
+    supplier = [i for i in data["Supplier"].unique()]
+
+if len(pri_supplier) == 0:
+    pri_supplier = [i for i in data["Priced_At_supplier"].unique()]
+
+if len(barcode) == 0:
+    barcode = [i for i in data["Barcode"].unique()]
+
+data_selection = data.query("Order_Status == @status & Channel == @channel & Supplier == @supplier & Barcode == @barcode  & Priced_At_supplier == @pri_supplier")
 data_selection = data_selection[columns]
 
 data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
