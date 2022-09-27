@@ -41,6 +41,8 @@ for i in orders:
         print(f'{a} done - N/A')
         reasons.append("N/A")
 
+st.write(reasons)
+
 reasons_df = pd.DataFrame()
 reasons_df['Order ID'] = [i.split(" / ")[1] for i in reasons]
 reasons_df['Barcode'] = [str(int(i)) for i in data_can['Barcode']]
