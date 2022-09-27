@@ -71,8 +71,8 @@ data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(b
 data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
 data_temp2 = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']]
 data_temp2 = data_temp2.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
-data_temp2['Total Sold Qty'] = data_temp1['Total Qty']
-data_temp2['Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
+data_temp2['All status Total Sold Qty'] = data_temp1['Total Qty']
+data_temp2['All status Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
 data_temp2 = data_temp2.reset_index().sort_values(by='Qty',ascending=False)
 
 st.markdown("---")
@@ -107,6 +107,8 @@ except:
 
 st.markdown("---")
 
+st.subheader('Grouped by filters')
+
 st.subheader("Daily revenue (USD)")
 
 date_bar = data_selection.groupby(by='Date').sum()['Total_USD']
@@ -120,8 +122,6 @@ st.bar_chart(date_bar)
 #st.set_option('deprecation.showPyplotGlobalUse', False)
 #st.pyplot()
 
-st.markdown("---")
-
 channel_group = data_selection.groupby(by='Channel').sum()[['Qty','Total_USD']]
 channel_group = channel_group.sort_values(by='Qty',ascending=False)
 
@@ -133,6 +133,9 @@ barcode_group = barcode_group.sort_values(by='Qty',ascending=False)
 
 supplier_group = data_selection.groupby(by='Supplier').sum()[['Qty','Total_USD']]
 supplier_group = supplier_group.sort_values(by='Qty',ascending=False)
+
+pri_supplier_group = data_selection.groupby(by='Priced_At_supplier').sum()[['Qty','Total_USD']]
+pri_supplier_group = pri_supplier_group.sort_values(by='Qty',ascending=False)
 
 #channel_group.plot(kind = 'barh')
 
@@ -147,8 +150,16 @@ with right_column:
     st.subheader("Barcode")
     st.dataframe(barcode_group)
 
+left_column, middle_column, right_column = st.columns(3)
+with left_column:
+    st.subheader("Supplier")
+    st.dataframe(supplier_group)
+with middle_column:
+    st.subheader("Priced at supplier")
+    st.dataframe(pri_supplier_group)
+
 st.markdown("---")
 
-st.subheader(f"Ungrouped")
+st.subheader(f"Filtered but ungrouped")
 
 st.dataframe(data_selection)
