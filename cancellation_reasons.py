@@ -22,7 +22,7 @@ a = 0
 for i in orders:
     a = a + 1
     #try:
-    url = "https://all.worldfront.co/axis/orders.php?action=edit&oID="+str(i)
+    url = "https://staging.all.worldfront.co/axis/orders.php?action=edit&oID="+str(i)
     data = {'username': 'coskun','password': 'vateMuny73'}
     response = requests.post(url,auth = HTTPBasicAuth('coskun', 'vateMuny73'), data = data)
     url = response.text.split(' ')[-15][1:-4]
