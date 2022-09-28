@@ -86,6 +86,8 @@ try:
     reasons_df_bar = reasons_df_bar.sort_values(by = 'Count', ascending=False)
     reasons_df_bar['%'] = [int(i*10000/sum(reasons_df_bar['Count']))/100 for i in reasons_df_bar['Count']]
 
+    st.subheader(f"Total of cancelled orders: {len(data_selection)}")
+
     left_column, middle_column, right_column = st.columns(3)
     with left_column:
         st.subheader("Reason")
