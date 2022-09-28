@@ -134,4 +134,4 @@ try:
 
 except:
     st.subheader("Upload a file")
-    st.subheader("Don't forget to add the 'Priced At Supplier' before downloading the report")
+    st.subheader("Don't forget to add the 'Priced At Supplier' column before downloading the report")

@@ -23,6 +23,10 @@ try:
 
     data['Date'] = [datetime.datetime.strptime(i,'%d/%m/%Y %H:%M:%S') for i in data['Date_Purchased']]
     data['Date'] = [i.normalize() for i in data['Date']]
+    try:
+        del data["Image"]
+    except:
+        pass
 
     cols = data.columns.to_list()
 
@@ -88,9 +92,8 @@ try:
         with middle_column:
             st.subheader("Total revenue")
             st.subheader(f"{total_revenue:,} USD")
-        #with right_column:
-        #    st.subheader("Average")
-        #    st.subheader(f"{average:,}")
+        with right_column:
+            pass
 
     except:
         st.subheader('Select an option from the "Group by" drop list')
@@ -160,3 +163,4 @@ try:
 
 except:
     st.subheader("Upload a file")
+    st.subheader("Don't forget to add the 'Priced At Supplier' column before downloading the report")
