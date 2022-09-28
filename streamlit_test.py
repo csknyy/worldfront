@@ -23,6 +23,8 @@ try:
 
     data['Date'] = [datetime.datetime.strptime(i,'%d/%m/%Y %H:%M:%S') for i in data['Date_Purchased']]
     data['Date'] = [i.normalize() for i in data['Date']]
+
+    data = data.fillna("NaN")
     try:
         del data["Image"]
     except:
@@ -33,13 +35,27 @@ try:
     group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'], default = ['Date'])
     st.sidebar.markdown("---")
     st.sidebar.header("Filters")
-    columns = st.sidebar.multiselect("Columns",options = cols)
-    status = st.sidebar.multiselect("Order Status",options = data["Order_Status"].unique())
-    channel = st.sidebar.multiselect("Channel",options = data["Channel"].unique())
-    supplier = st.sidebar.multiselect("Supplier",options = data["Supplier"].unique())
-    pri_supplier = st.sidebar.multiselect("Priced at supplier",options = data["Priced_At_supplier"].unique())
-    barcode = st.sidebar.multiselect("Barcode",options = data["Barcode"].unique())
-    country = st.sidebar.multiselect("Country",options = data["Country"].unique())
+    columns_opt = [str(i) for i in data.columns.unique()]
+    columns_opt.sort()
+    columns = st.sidebar.multiselect("Columns",options = columns_opt)
+    status_opt = [str(i) for i in data["Order_Status"].unique()]
+    status_opt.sort()
+    status = st.sidebar.multiselect("Order Status",options = status_opt)
+    channel_opt = [str(i) for i in data["Channel"].unique()]
+    channel_opt.sort()
+    channel = st.sidebar.multiselect("Channel",options = channel_opt)
+    supplier_opt = [str(i) for i in data["Supplier"].unique()]
+    supplier_opt.sort()
+    supplier = st.sidebar.multiselect("Supplier",options = supplier_opt)
+    pri_supplier_opt = [str(i) for i in data["Priced_At_supplier"].unique()]
+    pri_supplier_opt.sort()
+    pri_supplier = st.sidebar.multiselect("Priced at supplier",options = pri_supplier_opt)
+    barcode_opt = [i for i in data["Barcode"].unique()]
+    barcode_opt.sort()
+    barcode = st.sidebar.multiselect("Barcode",options = barcode_opt)
+    country_opt = [i for i in data["Country"].unique()]
+    country_opt.sort()
+    country = st.sidebar.multiselect("Country",options = country_opt)
 
     if len(columns) == 0:
         columns = [i for i in cols]
@@ -157,7 +173,7 @@ try:
 
     st.markdown("---")
 
-    st.subheader(f"Filtered but ungrouped")
+    st.subheader(f"Filtered - Ungrouped")
 
     st.dataframe(data_selection)
 

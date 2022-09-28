@@ -68,11 +68,21 @@ try:
     st.sidebar.markdown("---")
 
     st.sidebar.header("Filters")
-    reason = st.sidebar.multiselect("Reason",options = reasons_df["Reason"].unique())
-    channel = st.sidebar.multiselect("Channel",options = reasons_df["Channel"].unique())
-    pri_supplier = st.sidebar.multiselect("Priced at supplier",options = reasons_df["Priced_at_supplier"].unique())
-    barcode = st.sidebar.multiselect("Barcode",options = reasons_df["Barcode"].unique())
-    columns = st.sidebar.multiselect("Columns",options = reasons_df.columns)
+    reason_opt = [i for i in reasons_df["Reason"].unique()]
+    reason_opt.sort()
+    reason = st.sidebar.multiselect("Reason",options = reason_opt)
+    channel_opt = [i for i in reasons_df["Channel"].unique()]
+    channel_opt.sort()
+    channel = st.sidebar.multiselect("Channel",options = channel_opt)
+    pri_supplier_opt = [i for i in reasons_df["Priced_at_supplier"].unique()]
+    pri_supplier_opt.sort()
+    pri_supplier = st.sidebar.multiselect("Priced at supplier",options = pri_supplier_opt)
+    barcode_opt = [i for i in reasons_df["Barcode"].unique()]
+    barcode_opt.sort()
+    barcode = st.sidebar.multiselect("Barcode",options = barcode_opt)
+    columns_opt = [i for i in reasons_df.columns]
+    columns_opt.sort()
+    columns = st.sidebar.multiselect("Columns",options = columns_opt)
 
     if len(columns) == 0:
         columns = [i for i in reasons_df.columns]
