@@ -128,12 +128,12 @@ try:
         st.dataframe(reasons_df_bar)
 
     st.markdown("---")
-
+    st.subheader("Applicable orders - Ungrouped")
     st.write(data_selection)
 
     if nan_count > 0:
         st.markdown("---")
-        st.subheader("NaN orders")
+        st.subheader("NaN orders - Ungrouped")
         st.write(data_selection_nan)
     else:
         pass
