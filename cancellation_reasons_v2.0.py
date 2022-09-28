@@ -26,6 +26,10 @@ try:
     data_can = pd.read_csv(file)
     data_can['Date Purchased'] = pd.to_datetime(data_can['Date Purchased'], format='%d/%m/%Y %H:%M:%S')
     data_can = data_can[data_can['Order Status'] == "Canceled"]
+    try:
+        del data_can["Image"]
+    except:
+        pass
 
     cols = data_can.columns.to_list()
     for i in range(len(cols)):
@@ -38,9 +42,26 @@ try:
     reasons_df['Channel'] = [i for i in data_can['Channel']]
     reasons_df['Priced_at_supplier'] = [i for i in data_can['Priced_At_supplier']]
     reasons_df['Priced_at_supplier'].fillna("WF Stock, Fulfillment by Amazon", inplace = True)
-    reasons_df['Reason'] = [all_reasons.query(f'Order_ID in [{i}]')['Refund_Reason'].values[0] for i in data_can['Order_ID']]
+
+    reasons = []
+    for i in data_can['Order_ID']:
+        try:
+            reasons.append(all_reasons.query(f'Order_ID in [{i}]')['Refund_Reason'].values[0])
+        except:
+            reasons.append('NaN')
+    reasons_df['Reason'] = reasons
+    #reasons_df['Reason'] = [all_reasons.query(f'Order_ID in [{i}]')['Refund_Reason'].values[0] for i in data_can['Order_ID']]
+
     reasons_df['Date_purchased'] = [i for i in data_can['Date_Purchased']]
-    reasons_df['Date_cancelled'] = [all_reasons.query(f'Order_ID in [{i}]')['Date_Cancelled'].values[0] for i in data_can['Order_ID']]
+
+    date_can = []
+    for i in data_can['Order_ID']:
+        try:
+            date_can.append(all_reasons.query(f'Order_ID in [{i}]')['Date_Cancelled'].values[0])
+        except:
+            date_can.append('NaN')
+    reasons_df['Date_cancelled'] = date_can
+    #reasons_df['Date_cancelled'] = [all_reasons.query(f'Order_ID in [{i}]')['Date_Cancelled'].values[0] for i in data_can['Order_ID']]
 
     ################################################
 
@@ -107,3 +128,4 @@ try:
 
 except:
     st.subheader("Upload a file")
+    st.subheader("Don't forget to add the 'Priced At Supplier' before downloading the report")
