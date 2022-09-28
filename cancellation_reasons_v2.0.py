@@ -92,6 +92,10 @@ try:
     data_selection = reasons_df.query("Channel == @channel & Priced_at_supplier == @pri_supplier & Barcode == @barcode & Reason == @reason")
     data_selection = data_selection[columns]
     data_selection['Order_ID'] = [str(i) for i in data_selection['Order_ID']]
+    total_count = len(data_selection)
+    nan_count = len(data_selection[data_selection['Reason'] == 'NaN'])
+
+    data_selection = data_selection[~(data_selection['Reason'] == 'NaN')]
 
     reasons_df_res = pd.DataFrame(data_selection.groupby(by='Reason').count()['Order_ID'])
     reasons_df_res = reasons_df_res.rename(columns = {'Order_ID':'Count'})
@@ -108,7 +112,8 @@ try:
     reasons_df_bar = reasons_df_bar.sort_values(by = 'Count', ascending=False)
     reasons_df_bar['%'] = [int(i*10000/sum(reasons_df_bar['Count']))/100 for i in reasons_df_bar['Count']]
 
-    st.subheader(f"Total of cancelled orders: {len(data_selection)}")
+    st.subheader(f"Total of cancelled orders: {total_count} ----- Order removed because 'NaN': {nan_count}")
+    st.subheader(f"Orders with applicable reasons: {total_count-nan_count}")
 
     left_column, middle_column, right_column = st.columns(3)
     with left_column:
