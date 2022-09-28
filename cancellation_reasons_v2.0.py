@@ -91,6 +91,7 @@ try:
 
     data_selection = reasons_df.query("Channel == @channel & Priced_at_supplier == @pri_supplier & Barcode == @barcode & Reason == @reason")
     data_selection = data_selection[columns]
+    data_selection['Order_ID'] = [str(i) for i in data_selection['Order_ID']]
 
     reasons_df_res = pd.DataFrame(data_selection.groupby(by='Reason').count()['Order_ID'])
     reasons_df_res = reasons_df_res.rename(columns = {'Order_ID':'Count'})
