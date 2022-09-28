@@ -92,8 +92,9 @@ try:
     data_selection = reasons_df.query("Channel == @channel & Priced_at_supplier == @pri_supplier & Barcode == @barcode & Reason == @reason")
     data_selection = data_selection[columns]
     data_selection['Order_ID'] = [str(i) for i in data_selection['Order_ID']]
+    data_selection_nan = data_selection[data_selection['Reason'] == 'NaN']
     total_count = len(data_selection)
-    nan_count = len(data_selection[data_selection['Reason'] == 'NaN'])
+    nan_count = len(data_selection_nan)
 
     data_selection = data_selection[~(data_selection['Reason'] == 'NaN')]
 
@@ -129,6 +130,13 @@ try:
     st.markdown("---")
 
     st.write(data_selection)
+
+    if nan_count > 0:
+        st.markdown("---")
+        st.subheader("NaN orders")
+        st.write(data_selection_nan)
+    else:
+        pass
 
     reasons_df.to_csv('Cancellation_reasons_report.csv', index=False)
 
