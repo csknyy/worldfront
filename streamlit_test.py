@@ -35,9 +35,7 @@ try:
     group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'], default = ['Date'])
     st.sidebar.markdown("---")
     st.sidebar.header("Filters")
-    columns_opt = [str(i) for i in data.columns.unique()]
-    columns_opt.sort()
-    columns = st.sidebar.multiselect("Columns",options = columns_opt)
+
     status_opt = [str(i) for i in data["Order_Status"].unique()]
     status_opt.sort()
     status = st.sidebar.multiselect("Order Status",options = status_opt)
@@ -56,9 +54,9 @@ try:
     country_opt = [i for i in data["Country"].unique()]
     country_opt.sort()
     country = st.sidebar.multiselect("Country",options = country_opt)
-
-    if len(columns) == 0:
-        columns = [i for i in cols]
+    #columns_opt = [str(i) for i in data.columns.unique()]
+    #columns_opt.sort()
+    columns = st.sidebar.multiselect("Columns", options = cols, default = cols)
 
     if len(status) == 0:
         status = [i for i in data["Order_Status"].unique()]
@@ -77,6 +75,9 @@ try:
 
     if len(country) == 0:
         country = [i for i in data["Country"].unique()]
+
+    if len(columns) == 0:
+        columns = [i for i in cols]
 
     data_selection = data.query("Order_Status == @status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
     data_selection = data_selection[columns]
@@ -167,6 +168,7 @@ try:
     with left_column:
         st.subheader("Supplier")
         st.dataframe(supplier_group)
+        st.markdown("Keep in mind that the supplier is NaN because the order hasn't been supplied.")
     with middle_column:
         st.subheader("Priced at supplier")
         st.dataframe(pri_supplier_group)
