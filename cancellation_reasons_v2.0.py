@@ -9,7 +9,7 @@ all_cancel = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/ma
 all_restricted = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/restricted_cancelled.csv')
 
 all_cancel['Date_temp'] = pd.to_datetime(all_cancel['Hour of Date Purchased'], format='%B %d, %Y, %I %p')
-latest_date = pd.datetime.datetime.strftime(all_cancel['Date_temp'].max(),'%d-%m-%Y')
+latest_date = str(all_cancel['Date_temp'].max())[:10].split("-")
 
 all_restricted['Refund Reason'] = 'Restricted item'
 all_reasons = pd.concat([all_cancel, all_restricted], ignore_index=True)
@@ -24,7 +24,7 @@ for i in range(len(cols)):
     cols[i] = cols[i].replace(" ", "_")
 all_reasons.columns = cols
 
-st.subheader(f"Orders cancelled before {latest_date} are in the tool")
+st.subheader(f"Orders cancelled before {latest_date[2]}-{latest_date[1]}-{latest_date[0]} are in the tool")
 
 file = st.file_uploader("")
 
