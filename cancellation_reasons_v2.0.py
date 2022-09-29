@@ -142,8 +142,8 @@ try:
     if nan_count > 0:
         st.markdown("---")
         st.subheader("NaN orders - Ungrouped")
-        st.markdown("Most likely these orders are not in the saved database yet")
         st.write(data_selection_nan)
+        st.markdown("Most likely these orders are not in the saved database yet")
     else:
         pass
 
