@@ -121,7 +121,7 @@ try:
 
 
 
-    st.subheader(f"Total of cancelled orders: {total_count} ----- Orders removed because 'NaN': {nan_count}")
+    st.subheader(f"Total of cancelled orders: {total_count} ----- Orders removed from report because 'NaN': {nan_count}")
     st.subheader(f"Orders with applicable reasons: {total_count-nan_count}")
 
     left_column, middle_column, right_column = st.columns(3)
