@@ -4,21 +4,27 @@ import datetime
 
 st.set_page_config(page_title="Cancellation reasons", layout="wide")
 
-all_reasons = pd.read_csv('https://www.coskunyay.com/worldfront/orders_cancelled.csv')
-all_reasons['Date Cancelled'] = pd.to_datetime(all_reasons['Day of Date Cancelled'], format='%B %d, %Y')
-all_reasons['Day of Date Cancelled'] = [datetime.datetime.strftime(i, '%d-%m-%Y') for i in all_reasons['Date Cancelled']]
+#all_reasons = pd.read_csv('https://www.coskunyay.com/worldfront/orders_cancelled.csv')
+all_cancel = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/orders_cancelled.csv')
+all_restricted = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/restricted_cancelled.csv')
+
+all_cancel['Date_temp'] = pd.to_datetime(all_cancel['Hour of Date Purchased'], format='%B %d, %Y, %I %p')
+latest_date = pd.datetime.datetime.strftime(all_cancel['Date_temp'].max(),'%d-%m-%Y')
+
+all_restricted['Refund Reason'] = 'Restricted item'
+all_reasons = pd.concat([all_cancel, all_restricted], ignore_index=True)
+
 all_reasons['Refund Reason'] = [i.replace("Marked shipped but unable to fulfil","Unable to fulfil") for i in all_reasons['Refund Reason']]
 all_reasons['Refund Reason'] = [i.replace("Unable to fulfill","Unable to fulfil") for i in all_reasons['Refund Reason']]
 
-all_reasons = all_reasons.sort_values(by = 'Date Cancelled', ascending=True).reset_index()
-del all_reasons['index']
+all_reasons = all_reasons.loc[:,['Order ID','Products Name','Refund Reason']]
 
 cols = all_reasons.columns.to_list()
 for i in range(len(cols)):
     cols[i] = cols[i].replace(" ", "_")
 all_reasons.columns = cols
 
-st.subheader(f"This tool has the cancel reasons for the orders between {all_reasons['Day_of_Date_Cancelled'][0]} and {all_reasons['Day_of_Date_Cancelled'][len(all_reasons)-1]}")
+st.subheader(f"Orders cancelled before {latest_date} are in the tool")
 
 file = st.file_uploader("")
 
@@ -50,18 +56,8 @@ try:
         except:
             reasons.append('NaN')
     reasons_df['Reason'] = reasons
-    #reasons_df['Reason'] = [all_reasons.query(f'Order_ID in [{i}]')['Refund_Reason'].values[0] for i in data_can['Order_ID']]
 
     reasons_df['Date_purchased'] = [i for i in data_can['Date_Purchased']]
-
-    date_can = []
-    for i in data_can['Order_ID']:
-        try:
-            date_can.append(all_reasons.query(f'Order_ID in [{i}]')['Date_Cancelled'].values[0])
-        except:
-            date_can.append('NaN')
-    reasons_df['Date_cancelled'] = date_can
-    #reasons_df['Date_cancelled'] = [all_reasons.query(f'Order_ID in [{i}]')['Date_Cancelled'].values[0] for i in data_can['Order_ID']]
 
     ################################################
 
@@ -123,7 +119,9 @@ try:
     reasons_df_bar = reasons_df_bar.sort_values(by = 'Count', ascending=False)
     reasons_df_bar['%'] = [int(i*10000/sum(reasons_df_bar['Count']))/100 for i in reasons_df_bar['Count']]
 
-    st.subheader(f"Total of cancelled orders: {total_count} ----- Order removed because 'NaN': {nan_count}")
+
+
+    st.subheader(f"Total of cancelled orders: {total_count} ----- Orders removed because 'NaN': {nan_count}")
     st.subheader(f"Orders with applicable reasons: {total_count-nan_count}")
 
     left_column, middle_column, right_column = st.columns(3)
