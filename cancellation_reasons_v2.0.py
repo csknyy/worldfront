@@ -142,11 +142,12 @@ try:
     if nan_count > 0:
         st.markdown("---")
         st.subheader("NaN orders - Ungrouped")
+        st.markdown("Most likely these orders are not in the saved database yet")
         st.write(data_selection_nan)
     else:
         pass
 
-    reasons_df.to_csv('Cancellation_reasons_report.csv', index=False)
+    #reasons_df.to_csv('Cancellation_reasons_report.csv', index=False)
 
 except:
     st.subheader("Upload a file")
