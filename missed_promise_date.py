@@ -3,14 +3,14 @@ import streamlit as st
 
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
-data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
+#data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
 
-#try:
-#    file = st.file_uploader("Drag and drop a file")
-#    data_raw = pd.read_csv(file)
+try:
+    file = st.file_uploader("Drag and drop a file")
+    data_raw = pd.read_csv(file)
 
-#except:
-#    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
+except:
+    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
 
 try:
     data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
@@ -75,7 +75,7 @@ try:
 
     data2_1 = data2_1.rename(columns={"Barcode" : "Untracked"})
     data2_2 = data2_2.rename(columns={"Barcode" : "Tracked"})
-    data2 = pd.merge(data2_1,data2_2).fillna(0).astype(int , errors='ignore')
+    data2 = pd.merge(data2_1,data2_2,how='outer').fillna(0).astype(int , errors='ignore')
 
 
     data3_1 = data[data['Delivery_Date'] == ''].groupby(by="Supplier").count()['Barcode']
