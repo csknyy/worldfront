@@ -28,25 +28,27 @@ data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y
 data["Promise_Date"] = pd.to_datetime(data["Promise_Date"], format="%d/%m/%Y")
 data["Shipped_Date"] = pd.to_datetime(data["Shipped_Date"], format="%d/%m/%Y")
 data["Delivery_Date"] = pd.to_datetime(data["Delivery_Date"], format="%d/%m/%Y")
-data["Handover_to_Carrier"] = pd.to_datetime(data["Handover_to_Carrier"], format="%d/%m/%Y")
+#data["Handover_to_Carrier"] = pd.to_datetime(data["Handover_to_Carrier"], format="%d/%m/%Y")
 
-data = data.replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
+data['Shipped_Date'] = data['Shipped_Date'].replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
+data['Delivery_Date'] = data['Delivery_Date'].replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
+data = data.fillna('NaN')
 
-data['Date_Purchased'] = data['Date_Purchased'].dt.date
+#data['Date_Purchased'] = data['Date_Purchased'].dt.date
 data['Promise_Date'] = data['Promise_Date'].dt.date
 data['Shipped_Date'] = data['Shipped_Date'].dt.date
 data['Delivery_Date'] = data['Delivery_Date'].dt.date
-data['Handover_to_Carrier'] = data['Handover_to_Carrier'].dt.date
+#data['Handover_to_Carrier'] = data['Handover_to_Carrier'].dt.date
 
 st.header(f"{type(data['Date_Purchased'][0])}")
 st.header(f"{type(data['Promise_Date'][0])}")
 st.header(f"{type(data['Shipped_Date'][0])}")
 st.header(f"{type(data['Delivery_Date'][0])}")
 
-try:
-    data = data.replace(pd.to_datetime('1987-07-11', format="%d/%m/%Y"), "")
-except:
-    data = data.replace(pd.to_datetime('11/07/1987', format="%d/%m/%Y"), "")
+#try:
+data = data.replace(pd.to_datetime('1987-07-11', format="%Y-%m-%d"), "")
+#except:
+#data = data.replace(pd.to_datetime('11/07/1987', format="%d/%m/%Y"), "")
 
 st.dataframe(data.astype(str))
 
@@ -69,8 +71,10 @@ data_selection = data[columns]
 
 #####################
 
-tracked = len(data[~(data['Delivery_Date'] == '')])
-untracked = len(data[data['Delivery_Date'] == ''])
+st.header(f"{type(data['Delivery_Date'][1])}")
+
+tracked = len(data[~(data['Delivery_Date'] == "")])
+untracked = len(data[data['Delivery_Date'] == ""])
 total = tracked + untracked
 
 data1 = pd.DataFrame({'Count':[tracked, untracked, total]}, index=['Tracked','Untracked','Total'])
