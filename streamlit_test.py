@@ -104,24 +104,27 @@ try:
         st.subheader(f"Grouped by {group_by}")
         st.write(data_groupby)
 
-        total_revenue = data_selection["Total_USD"].sum()
-        total_revenue = int(total_revenue * 100) / 100
-        total_qty = data_selection["Qty"].sum()
-        average = total_revenue / total_qty
-        average = int(average * 100) / 100
+        date_groupby_bar = data_groupby.groupby(by='Date').sum()['Revenue (USD)']
+        st.bar_chart(date_groupby_bar)
 
-        left_column, middle_column, right_column = st.columns(3)
-        with left_column:
-            st.subheader("Total quantity")
-            st.subheader(f"{total_qty:,}")
-        with middle_column:
-            st.subheader("Total revenue")
-            st.subheader(f"{total_revenue:,} USD")
-        with right_column:
-            pass
+        #total_revenue = data_selection["Total_USD"].sum()
+        #total_revenue = int(total_revenue * 100) / 100
+        #total_qty = data_selection["Qty"].sum()
+        #average = total_revenue / total_qty
+        #average = int(average * 100) / 100
+
+        #left_column, middle_column, right_column = st.columns(3)
+        #with left_column:
+        #    st.subheader("Total quantity")
+        #    st.subheader(f"{total_qty:,}")
+        #with middle_column:
+        #    st.subheader("Total revenue")
+        #    st.subheader(f"{total_revenue:,} USD")
+        #with right_column:
+        #    pass
 
     except:
-        st.subheader('Select an option from the "Group by" drop list')
+        st.text("Choose 'Date' for a specific bar chart")
 
     #st.markdown("---")
 
