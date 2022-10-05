@@ -3,14 +3,14 @@ import streamlit as st
 
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
-data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_promise_date_test.csv")
+try:
+    file = st.file_uploader("Drag and drop a file")
+    st.subheader("Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
+    st.markdown('---')
+    data_raw = pd.read_csv(file)
 
-#try:
-#    file = st.file_uploader("Drag and drop a file")
-#    data_raw = pd.read_csv(file)
-#
-#except:
-#    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
+except:
+    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_promise_date_test.csv")
 
 #try:
 data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
@@ -23,6 +23,7 @@ for i in range(len(cols)):
 data.columns = cols
 
 data = data.rename(columns={"Priced_At_supplier" : "Priced_at_supplier"})
+data['Supplier'] = data['Supplier'].fillna("NaN")
 
 data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y %H:%M:%S")
 data["Promise_Date"] = pd.to_datetime(data["Promise_Date"], format="%d/%m/%Y")
@@ -35,8 +36,6 @@ data['Promise_Date'] = data['Promise_Date'].dt.date
 data['Shipped_Date'] = data['Shipped_Date'].dt.date
 data['Delivery_Date'] = data['Delivery_Date'].dt.date
 #data['Handover_to_Carrier'] = data['Handover_to_Carrier'].dt.date
-
-st.dataframe(data.astype(str))
 
 #####################
 
@@ -107,9 +106,10 @@ with right_column:
 
 st.markdown('---')
 
-st.header('Box Score - Priced at supplier')
+st.header('Box Score - Priced at supplier and Supplier are same')
 
-data_boxscore = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier']]
+data_boxscore = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier','Supplier']]
+data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
 
 for i in data_boxscore.columns[:4]:
     data_boxscore[i] = pd.to_datetime(data_boxscore[i])
@@ -117,20 +117,26 @@ for i in data_boxscore.columns[:4]:
 data_boxscore['Count'] = 1
 
 data_boxscore['Shipped_days'] = data_boxscore['Shipped_Date'] - data_boxscore['Date_Purchased']
-data_boxscore['Shipped_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Shipped_days']]
+data_boxscore['Shipped_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
+                                 data_boxscore['Shipped_days']]
 
 data_boxscore['Delivered_days'] = data_boxscore['Delivery_Date'] - data_boxscore['Date_Purchased']
-data_boxscore['Delivered_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Delivered_days']]
+data_boxscore['Delivered_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
+                                   data_boxscore['Delivered_days']]
 
 data_boxscore['Promised_days'] = data_boxscore['Promise_Date'] - data_boxscore['Date_Purchased']
-data_boxscore['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Promised_days']]
+data_boxscore['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
+                                  data_boxscore['Promised_days']]
 
 data_boxscore['Promise_Delivery'] = data_boxscore['Promise_Date'] - data_boxscore['Delivery_Date']
-data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Promise_Delivery']]
+data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
+                                     data_boxscore['Promise_Delivery']]
 
 data_boxscore_2 = data_boxscore.groupby(by='Priced_at_supplier').sum()
 
-data_boxscore_2.loc['Total',:] = [sum(data_boxscore['Count']),sum(data_boxscore['Shipped_days']),sum(data_boxscore['Delivered_days']),sum(data_boxscore['Promised_days']),sum(data_boxscore['Promise_Delivery'])]
+data_boxscore_2.loc['Total', :] = [sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']),
+                                   sum(data_boxscore['Delivered_days']), sum(data_boxscore['Promised_days']),
+                                   sum(data_boxscore['Promise_Delivery'])]
 
 data_boxscore_2['Count'] = [int(i) for i in data_boxscore_2['Count']]
 
@@ -139,20 +145,19 @@ data_boxscore_2['Avg_Delivered_days'] = (data_boxscore_2['Delivered_days'] / dat
 data_boxscore_2['Avg_Promised_days'] = (data_boxscore_2['Promised_days'] / data_boxscore_2['Count']).round(2)
 data_boxscore_2['Avg_Promise_Delivery'] = (data_boxscore_2['Promise_Delivery'] / data_boxscore_2['Count']).round(2)
 
-data_boxscore_2 = data_boxscore_2[['Count', 'Avg_Shipped_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Avg_Promise_Delivery']]
+data_boxscore_2 = data_boxscore_2[
+    ['Count', 'Avg_Shipped_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Avg_Promise_Delivery']]
 
-st.dataframe(data_boxscore_2.sort_values(by='Avg_Promise_Delivery', ascending=True).reset_index())
-
-##################################
+st.dataframe(data_boxscore_2.sort_values(by='Count', ascending=False).reset_index())
 
 st.markdown('---')
 
-st.header('Box Score - Supplier')
+st.header('Box Score - Priced at supplier')
 
-data_boxscore1 = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Supplier']]
+data_boxscore1 = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier']]
 
 for i in data_boxscore1.columns[:4]:
-    data_boxscore1[i] = pd.to_datetime(data_boxscore[i])
+    data_boxscore1[i] = pd.to_datetime(data_boxscore1[i])
 
 data_boxscore1['Count'] = 1
 
@@ -160,6 +165,7 @@ data_boxscore1['Shipped_days'] = data_boxscore1['Shipped_Date'] - data_boxscore1
 data_boxscore1['Shipped_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore1['Shipped_days']]
 
 data_boxscore1['Delivered_days'] = data_boxscore1['Delivery_Date'] - data_boxscore1['Date_Purchased']
+
 data_boxscore1['Delivered_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore1['Delivered_days']]
 
 data_boxscore1['Promised_days'] = data_boxscore1['Promise_Date'] - data_boxscore1['Date_Purchased']
@@ -168,9 +174,11 @@ data_boxscore1['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60))
 data_boxscore1['Promise_Delivery'] = data_boxscore1['Promise_Date'] - data_boxscore1['Delivery_Date']
 data_boxscore1['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore1['Promise_Delivery']]
 
-data_boxscore1_2 = data_boxscore1.groupby(by='Supplier').sum()
+data_boxscore1_2 = data_boxscore1.groupby(by='Priced_at_supplier').sum()
 
 data_boxscore1_2.loc['Total',:] = [sum(data_boxscore1['Count']),sum(data_boxscore1['Shipped_days']),sum(data_boxscore1['Delivered_days']),sum(data_boxscore1['Promised_days']),sum(data_boxscore1['Promise_Delivery'])]
+
+data_boxscore1_2['Count'] = [int(i) for i in data_boxscore1_2['Count']]
 
 data_boxscore1_2['Avg_Shipped_days'] = (data_boxscore1_2['Shipped_days'] / data_boxscore1_2['Count']).round(2)
 data_boxscore1_2['Avg_Delivered_days'] = (data_boxscore1_2['Delivered_days'] / data_boxscore1_2['Count']).round(2)
@@ -179,16 +187,54 @@ data_boxscore1_2['Avg_Promise_Delivery'] = (data_boxscore1_2['Promise_Delivery']
 
 data_boxscore1_2 = data_boxscore1_2[['Count', 'Avg_Shipped_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Avg_Promise_Delivery']]
 
-data_boxscore1_2['Count'] = [int(i) for i in data_boxscore1_2['Count']]
+st.dataframe(data_boxscore1_2.sort_values(by='Count', ascending=False).reset_index())
 
-st.dataframe(data_boxscore1_2.sort_values(by='Avg_Promise_Delivery', ascending=True).reset_index())
+##################################
 
 st.markdown('---')
 
+st.header('Box Score - Supplier')
+
+data_boxscore2 = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Supplier']]
+
+for i in data_boxscore2.columns[:4]:
+    data_boxscore2[i] = pd.to_datetime(data_boxscore2[i])
+
+data_boxscore2['Count'] = 1
+
+data_boxscore2['Shipped_days'] = data_boxscore2['Shipped_Date'] - data_boxscore2['Date_Purchased']
+data_boxscore2['Shipped_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore2['Shipped_days']]
+
+data_boxscore2['Delivered_days'] = data_boxscore2['Delivery_Date'] - data_boxscore2['Date_Purchased']
+data_boxscore2['Delivered_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore2['Delivered_days']]
+
+data_boxscore2['Promised_days'] = data_boxscore2['Promise_Date'] - data_boxscore2['Date_Purchased']
+data_boxscore2['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore2['Promised_days']]
+
+data_boxscore2['Promise_Delivery'] = data_boxscore2['Promise_Date'] - data_boxscore2['Delivery_Date']
+data_boxscore2['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore2['Promise_Delivery']]
+
+data_boxscore2_2 = data_boxscore2.groupby(by='Supplier').sum()
+
+data_boxscore2_2.loc['Total',:] = [sum(data_boxscore2['Count']),sum(data_boxscore2['Shipped_days']),sum(data_boxscore2['Delivered_days']),sum(data_boxscore2['Promised_days']),sum(data_boxscore2['Promise_Delivery'])]
+
+data_boxscore2_2['Avg_Shipped_days'] = (data_boxscore2_2['Shipped_days'] / data_boxscore2_2['Count']).round(2)
+data_boxscore2_2['Avg_Delivered_days'] = (data_boxscore2_2['Delivered_days'] / data_boxscore2_2['Count']).round(2)
+data_boxscore2_2['Avg_Promised_days'] = (data_boxscore2_2['Promised_days'] / data_boxscore2_2['Count']).round(2)
+data_boxscore2_2['Avg_Promise_Delivery'] = (data_boxscore2_2['Promise_Delivery'] / data_boxscore2_2['Count']).round(2)
+
+data_boxscore2_2 = data_boxscore2_2[['Count', 'Avg_Shipped_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Avg_Promise_Delivery']]
+
+data_boxscore2_2['Count'] = [int(i) for i in data_boxscore2_2['Count']]
+
+st.dataframe(data_boxscore2_2.sort_values(by='Count', ascending=False).reset_index())
+
+st.markdown('---')
+
+st.header("Raw data")
 st.write(data.astype(str))
 
 #except:
-#    st.subheader(
-#        "Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
+#    st.subheader("An error occurred")
 #
 #    st.markdown('---')
