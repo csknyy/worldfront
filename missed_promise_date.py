@@ -32,10 +32,16 @@ try:
 
     data = data.replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
 
+    data['Date_Purchased'] = data['Date_Purchased'].dt.date
     data['Promise_Date'] = data['Promise_Date'].dt.date
     data['Shipped_Date'] = data['Shipped_Date'].dt.date
     data['Delivery_Date'] = data['Delivery_Date'].dt.date
     data['Handover_to_Carrier'] = data['Handover_to_Carrier'].dt.date
+
+    st.header(f"{type(data['Date_Purchased'][0])}")
+    st.header(f"{type(data['Promise_Date'][0])}")
+    st.header(f"{type(data['Shipped_Date'][0])}")
+    st.header(f"{type(data['Delivery_Date'][0])}")
 
     data = data.replace(pd.to_datetime('11/07/1987', format="%d/%m/%Y"), "")
 
