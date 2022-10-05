@@ -45,10 +45,15 @@ st.header(f"{type(data['Promise_Date'][0])}")
 st.header(f"{type(data['Shipped_Date'][0])}")
 st.header(f"{type(data['Delivery_Date'][0])}")
 
+
+
 #try:
 data = data.replace(pd.to_datetime('1987-07-11', format="%Y-%m-%d"), "")
 #except:
 #data = data.replace(pd.to_datetime('11/07/1987', format="%d/%m/%Y"), "")
+
+st.header(f"Date = {data['Delivery_Date'][1]}")
+st.header(f"Type = {type(data['Delivery_Date'][1])}")
 
 st.dataframe(data.astype(str))
 
@@ -70,8 +75,6 @@ columns = st.sidebar.multiselect("Columns",options = columns_opt , default = [i 
 data_selection = data[columns]
 
 #####################
-
-st.header(f"{type(data['Delivery_Date'][1])}")
 
 tracked = len(data[~(data['Delivery_Date'] == "")])
 untracked = len(data[data['Delivery_Date'] == ""])
