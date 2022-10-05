@@ -8,7 +8,7 @@ try:
 
     data_raw = pd.read_csv(file)
 except:
-    data_raw = pd.read_csv("https://github.com/csknyy/worldfront/blob/main/missed_orderdefects.csv")
+    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
 
 try:
     data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
