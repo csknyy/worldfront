@@ -22,7 +22,9 @@ try:
     data['Order_Status'] = [i.replace("Canceled", "Cancelled") for i in data['Order_Status']]
 
     data['Date'] = [datetime.datetime.strptime(i,'%d/%m/%Y %H:%M:%S') for i in data['Date_Purchased']]
-    data['Date'] = [i.normalize() for i in data['Date']]
+    #data['Date'] = [i.normalize() for i in data['Date']]
+    data['Date'] = data['Date'].dt.date
+
 
     data = data.fillna("NaN")
     try:
@@ -84,17 +86,23 @@ try:
 
     data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
     data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
-    data_temp2 = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']]
-    data_temp2 = data_temp2.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
-    data_temp2['All status Total Sold Qty'] = data_temp1['Total Qty']
-    data_temp2['All status Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
-    data_temp2 = data_temp2.reset_index().sort_values(by='Qty',ascending=False)
+    data_groupby = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']]
+    data_groupby = data_groupby.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
+    data_groupby['Rev per Qty'] = data_groupby['Revenue (USD)'] / data_groupby['Qty']
+
+    if len(status) == 5:
+        pass
+    else:
+        data_groupby['All status Total Sold Qty'] = data_temp1['Total Qty']
+        data_groupby['All status Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
+        data_groupby['Rev per Qty (All)'] = data_groupby['All status Total Revenue (USD)'] / data_groupby['All status Total Sold Qty']
+        data_groupby = data_groupby.reset_index().sort_values(by='Qty',ascending=False)
 
     st.markdown("---")
 
     try:
         st.subheader(f"Grouped by {group_by}")
-        st.write(data_temp2)
+        st.write(data_groupby)
 
         total_revenue = data_selection["Total_USD"].sum()
         total_revenue = int(total_revenue * 100) / 100
@@ -180,5 +188,5 @@ try:
     st.dataframe(data_selection)
 
 except:
-    st.subheader("Upload a file")
-    st.subheader("Don't forget to add the 'Priced At Supplier' column before downloading the report")
+    st.subheader("Upload a file - Don't forget to add the 'Priced At Supplier' column before downloading the report")
+    st.subheader("Or select an option from the Group by drop list")
