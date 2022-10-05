@@ -3,12 +3,14 @@ import streamlit as st
 
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
-try:
-    file = st.file_uploader("Drag and drop a file")
+data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
 
-    data_raw = pd.read_csv(file)
-except:
-    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
+#try:
+#    file = st.file_uploader("Drag and drop a file")
+#    data_raw = pd.read_csv(file)
+
+#except:
+#    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
 
 try:
     data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
@@ -27,6 +29,8 @@ try:
     data["Shipped_Date"] = pd.to_datetime(data["Shipped_Date"], format="%d/%m/%Y")
     data["Delivery_Date"] = pd.to_datetime(data["Delivery_Date"], format="%d/%m/%Y")
     data["Handover_to_Carrier"] = pd.to_datetime(data["Handover_to_Carrier"], format="%d/%m/%Y")
+
+    st.subheader(f"{type(data['Date_Purchased'][0])}")
 
     data = data.replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
 
@@ -56,8 +60,8 @@ try:
 
     #####################
 
-    untracked = len(data[data['Delivery_Date'] == ''])
     tracked = len(data[~(data['Delivery_Date'] == '')])
+    untracked = len(data[data['Delivery_Date'] == ''])
     total = tracked + untracked
 
     data1 = pd.DataFrame({'Count':[tracked, untracked, total]}, index=['Tracked','Untracked','Total'])
