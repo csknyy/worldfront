@@ -3,7 +3,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
-data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_orderdefects.csv")
+data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_promise_date_test.csv")
 
 #try:
 #    file = st.file_uploader("Drag and drop a file")
@@ -30,64 +30,45 @@ data["Shipped_Date"] = pd.to_datetime(data["Shipped_Date"], format="%d/%m/%Y")
 data["Delivery_Date"] = pd.to_datetime(data["Delivery_Date"], format="%d/%m/%Y")
 #data["Handover_to_Carrier"] = pd.to_datetime(data["Handover_to_Carrier"], format="%d/%m/%Y")
 
-data['Shipped_Date'] = data['Shipped_Date'].replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
-data['Delivery_Date'] = data['Delivery_Date'].replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
-data = data.fillna('NaN')
-
 #data['Date_Purchased'] = data['Date_Purchased'].dt.date
 data['Promise_Date'] = data['Promise_Date'].dt.date
 data['Shipped_Date'] = data['Shipped_Date'].dt.date
 data['Delivery_Date'] = data['Delivery_Date'].dt.date
 #data['Handover_to_Carrier'] = data['Handover_to_Carrier'].dt.date
 
-st.header(f"{type(data['Date_Purchased'][0])}")
-st.header(f"{type(data['Promise_Date'][0])}")
-st.header(f"{type(data['Shipped_Date'][0])}")
-st.header(f"{type(data['Delivery_Date'][0])}")
-
-
-
-#try:
-data = data.replace(pd.to_datetime('1987-07-11', format="%Y-%m-%d"), "")
-#except:
-#data = data.replace(pd.to_datetime('11/07/1987', format="%d/%m/%Y"), "")
-
-st.header(f"Date = {data['Delivery_Date'][1]}")
-st.header(f"Type = {type(data['Delivery_Date'][1])}")
-
 st.dataframe(data.astype(str))
 
 #####################
 
-st.sidebar.header("")
+#st.sidebar.header("")
 
 #group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_at_supplier','Order_Status'], default = ['Priced_at_supplier'])
 
-st.sidebar.markdown("---")
+#st.sidebar.markdown("---")
 
-columns_opt = [i for i in data.columns]
-columns_opt.sort()
-columns = st.sidebar.multiselect("Columns",options = columns_opt , default = [i for i in data.columns])
+#columns_opt = [i for i in data.columns]
+#columns_opt.sort()
+#columns = st.sidebar.multiselect("Columns",options = columns_opt , default = [i for i in data.columns])
 
 #if len(columns) == 0:
 #    columns = [i for i in data.columns]
 
-data_selection = data[columns]
+#data_selection = data[columns]
 
 #####################
 
-tracked = len(data[~(data['Delivery_Date'] == "")])
-untracked = len(data[data['Delivery_Date'] == ""])
+tracked = len(data[data['Delivery_Date'].isna()])
+untracked = len(data[~(data['Delivery_Date'].isna())])
 total = tracked + untracked
 
 data1 = pd.DataFrame({'Count':[tracked, untracked, total]}, index=['Tracked','Untracked','Total'])
 data1['%'] = [100*i/total for i in data1['Count']]
 
-data2_1 = data[data['Delivery_Date'] == ''].groupby(by="Priced_at_supplier").count()['Barcode']
+data2_1 = data[data['Delivery_Date'].isna()].groupby(by="Priced_at_supplier").count()['Barcode']
 data2_1 = pd.DataFrame(data2_1)
 data2_1 = data2_1.sort_values(by='Barcode',ascending=False).reset_index()
 
-data2_2 = data[~(data['Delivery_Date'] == '')].groupby(by="Priced_at_supplier").count()['Barcode']
+data2_2 = data[~(data['Delivery_Date'].isna())].groupby(by="Priced_at_supplier").count()['Barcode']
 data2_2 = pd.DataFrame(data2_2)
 data2_2 = data2_2.sort_values(by='Barcode',ascending=False).reset_index()
 
@@ -96,11 +77,11 @@ data2_2 = data2_2.rename(columns={"Barcode" : "Tracked"})
 data2 = pd.merge(data2_1,data2_2,how='outer').fillna(0).astype(int , errors='ignore')
 
 
-data3_1 = data[data['Delivery_Date'] == ''].groupby(by="Supplier").count()['Barcode']
+data3_1 = data[data['Delivery_Date'].isna()].groupby(by="Supplier").count()['Barcode']
 data3_1 = pd.DataFrame(data3_1)
 data3_1 = data3_1.sort_values(by='Barcode',ascending=False).reset_index()
 
-data3_2 = data[~(data['Delivery_Date'] == '')].groupby(by="Supplier").count()['Barcode']
+data3_2 = data[~(data['Delivery_Date'].isna())].groupby(by="Supplier").count()['Barcode']
 data3_2 = pd.DataFrame(data3_2)
 data3_2 = data3_2.sort_values(by='Barcode',ascending=False).reset_index()
 
@@ -128,7 +109,7 @@ st.markdown('---')
 
 st.header('Box Score - Priced at supplier')
 
-data_boxscore = data[~(data['Delivery_Date'] == "")][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier']]
+data_boxscore = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier']]
 
 for i in data_boxscore.columns[:4]:
     data_boxscore[i] = pd.to_datetime(data_boxscore[i])
@@ -136,20 +117,16 @@ for i in data_boxscore.columns[:4]:
 data_boxscore['Count'] = 1
 
 data_boxscore['Shipped_days'] = data_boxscore['Shipped_Date'] - data_boxscore['Date_Purchased']
-data_boxscore['Shipped_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
-                                 data_boxscore['Shipped_days']]
+data_boxscore['Shipped_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Shipped_days']]
 
 data_boxscore['Delivered_days'] = data_boxscore['Delivery_Date'] - data_boxscore['Date_Purchased']
-data_boxscore['Delivered_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
-                                   data_boxscore['Delivered_days']]
+data_boxscore['Delivered_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Delivered_days']]
 
 data_boxscore['Promised_days'] = data_boxscore['Promise_Date'] - data_boxscore['Date_Purchased']
-data_boxscore['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
-                                  data_boxscore['Promised_days']]
+data_boxscore['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Promised_days']]
 
 data_boxscore['Promise_Delivery'] = data_boxscore['Promise_Date'] - data_boxscore['Delivery_Date']
-data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
-                                     data_boxscore['Promise_Delivery']]
+data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Promise_Delivery']]
 
 data_boxscore_2 = data_boxscore.groupby(by='Priced_at_supplier').sum()
 
@@ -172,7 +149,7 @@ st.markdown('---')
 
 st.header('Box Score - Supplier')
 
-data_boxscore1 = data[~(data['Delivery_Date'] == "")][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Supplier']]
+data_boxscore1 = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Supplier']]
 
 for i in data_boxscore1.columns[:4]:
     data_boxscore1[i] = pd.to_datetime(data_boxscore[i])
@@ -208,7 +185,7 @@ st.dataframe(data_boxscore1_2.sort_values(by='Avg_Promise_Delivery', ascending=T
 
 st.markdown('---')
 
-st.write(data_selection.astype(str))
+st.write(data.astype(str))
 
 #except:
 #    st.subheader(
