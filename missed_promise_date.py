@@ -30,8 +30,6 @@ try:
     data["Delivery_Date"] = pd.to_datetime(data["Delivery_Date"], format="%d/%m/%Y")
     data["Handover_to_Carrier"] = pd.to_datetime(data["Handover_to_Carrier"], format="%d/%m/%Y")
 
-    st.subheader(f"{type(data['Date_Purchased'][0])}")
-
     data = data.replace({pd.NaT: pd.to_datetime('11/07/1987', format="%d/%m/%Y")})
 
     data['Promise_Date'] = data['Promise_Date'].dt.date
@@ -77,7 +75,7 @@ try:
 
     data2_1 = data2_1.rename(columns={"Barcode" : "Untracked"})
     data2_2 = data2_2.rename(columns={"Barcode" : "Tracked"})
-    data2 = pd.merge(data2_1,data2_2,how='outer').fillna(0).astype(int , errors='ignore')
+    data2 = pd.merge(data2_1,data2_2).fillna(0).astype(int , errors='ignore')
 
 
     data3_1 = data[data['Delivery_Date'] == ''].groupby(by="Supplier").count()['Barcode']
