@@ -43,9 +43,9 @@ try:
     st.header(f"{type(data['Shipped_Date'][0])}")
     st.header(f"{type(data['Delivery_Date'][0])}")
 
-    st.dataframe(data)
-
     data = data.replace(pd.to_datetime('11/07/1987', format="%d/%m/%Y"), "")
+
+    st.dataframe(data)
 
     #####################
 
