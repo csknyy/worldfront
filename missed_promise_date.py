@@ -24,12 +24,15 @@ data.columns = cols
 
 data = data.rename(columns={"Priced_At_supplier" : "Priced_at_supplier"})
 data['Supplier'] = data['Supplier'].fillna("NaN")
+data['Priced_at_supplier'] = data['Priced_at_supplier'].fillna("NaN")
 
 data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y %H:%M:%S")
 data["Promise_Date"] = pd.to_datetime(data["Promise_Date"], format="%d/%m/%Y")
 data["Shipped_Date"] = pd.to_datetime(data["Shipped_Date"], format="%d/%m/%Y")
 data["Delivery_Date"] = pd.to_datetime(data["Delivery_Date"], format="%d/%m/%Y")
 #data["Handover_to_Carrier"] = pd.to_datetime(data["Handover_to_Carrier"], format="%d/%m/%Y")
+data["Priced_at_supplier_fc"] = [i[:3] for i in data["Priced_at_supplier"]]
+data["Supplier_fc"] = [i[:3] for i in data["Supplier"]]
 
 #data['Date_Purchased'] = data['Date_Purchased'].dt.date
 data['Promise_Date'] = data['Promise_Date'].dt.date
@@ -39,20 +42,20 @@ data['Delivery_Date'] = data['Delivery_Date'].dt.date
 
 #####################
 
-#st.sidebar.header("")
+st.sidebar.header("Filters")
 
 #group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_at_supplier','Order_Status'], default = ['Priced_at_supplier'])
 
-#st.sidebar.markdown("---")
+priced_at_supplier_fc_opt = ['WFL','FRL','FPW','FPC','NaN']
+priced_at_supplier_fc = st.sidebar.multiselect("Priced at supplier - warehouse",options = priced_at_supplier_fc_opt , default = priced_at_supplier_fc_opt)
 
-#columns_opt = [i for i in data.columns]
-#columns_opt.sort()
-#columns = st.sidebar.multiselect("Columns",options = columns_opt , default = [i for i in data.columns])
+supplier_fc_opt = ['WFL','FRL','FPW','FPC','NaN']
+supplier_fc = st.sidebar.multiselect("Supplier - warehouse",options = supplier_fc_opt , default = supplier_fc_opt)
 
 #if len(columns) == 0:
 #    columns = [i for i in data.columns]
 
-#data_selection = data[columns]
+data = data.query("Priced_at_supplier_fc == @priced_at_supplier_fc & Supplier_fc == @supplier_fc")
 
 #####################
 
@@ -109,6 +112,7 @@ st.markdown('---')
 st.header('Box Score - Priced at supplier and Supplier are same')
 
 data_boxscore = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier','Supplier']]
+data_boxscore = data_boxscore[~(data['Promise_Date'].isna())]
 data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
 
 for i in data_boxscore.columns[:4]:
@@ -155,6 +159,7 @@ st.markdown('---')
 st.header('Box Score - Priced at supplier')
 
 data_boxscore1 = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier']]
+data_boxscore1 = data_boxscore1[~(data['Promise_Date'].isna())]
 
 for i in data_boxscore1.columns[:4]:
     data_boxscore1[i] = pd.to_datetime(data_boxscore1[i])
@@ -196,6 +201,7 @@ st.markdown('---')
 st.header('Box Score - Supplier')
 
 data_boxscore2 = data[~(data['Delivery_Date'].isna())][['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Supplier']]
+data_boxscore2 = data_boxscore2[~(data['Promise_Date'].isna())]
 
 for i in data_boxscore2.columns[:4]:
     data_boxscore2[i] = pd.to_datetime(data_boxscore2[i])
