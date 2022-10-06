@@ -24,7 +24,10 @@ data.columns = cols
 
 data = data.rename(columns={"Priced_At_supplier" : "Priced_at_supplier"})
 data['Supplier'] = data['Supplier'].fillna("NaN")
+data['Supplier'] = [i.replace("Do Not Use - ","") for i in data['Supplier']]
+
 data['Priced_at_supplier'] = data['Priced_at_supplier'].fillna("NaN")
+data['Priced_at_supplier'] = [i.replace("Do Not Use - ","") for i in data['Priced_at_supplier']]
 
 data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y %H:%M:%S")
 data["Promise_Date"] = pd.to_datetime(data["Promise_Date"], format="%d/%m/%Y")
@@ -46,16 +49,36 @@ st.sidebar.header("Filters")
 
 #group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_at_supplier','Order_Status'], default = ['Priced_at_supplier'])
 
-priced_at_supplier_fc_opt = ['WFL','FRL','FPW','FPC','NaN']
+priced_at_supplier_fc_opt = [i[:3] for i in data["Priced_at_supplier_fc"].unique()]
 priced_at_supplier_fc = st.sidebar.multiselect("Priced at supplier - warehouse",options = priced_at_supplier_fc_opt , default = priced_at_supplier_fc_opt)
 
-supplier_fc_opt = ['WFL','FRL','FPW','FPC','NaN']
+supplier_fc_opt = [i[:3] for i in data["Supplier_fc"].unique()]
 supplier_fc = st.sidebar.multiselect("Supplier - warehouse",options = supplier_fc_opt , default = supplier_fc_opt)
+
+pri_supplier_opt = [i for i in data["Priced_at_supplier"].unique()]
+pri_supplier_opt.sort()
+pri_supplier = st.sidebar.multiselect("Priced at supplier",options = pri_supplier_opt)
+
+supplier_opt = [i for i in data["Supplier"].unique()]
+supplier_opt.sort()
+supplier = st.sidebar.multiselect("Supplier",options = supplier_opt)
 
 #if len(columns) == 0:
 #    columns = [i for i in data.columns]
 
-data = data.query("Priced_at_supplier_fc == @priced_at_supplier_fc & Supplier_fc == @supplier_fc")
+if len(priced_at_supplier_fc) == 0:
+    priced_at_supplier_fc = priced_at_supplier_fc_opt
+
+if len(supplier_fc) == 0:
+    supplier_fc = supplier_fc_opt
+
+if len(pri_supplier) == 0:
+    pri_supplier = pri_supplier_opt
+
+if len(supplier) == 0:
+    supplier = supplier_opt
+
+data = data.query("Priced_at_supplier_fc == @priced_at_supplier_fc & Supplier_fc == @supplier_fc & Priced_at_supplier == @pri_supplier & Supplier == @supplier")
 
 #####################
 
