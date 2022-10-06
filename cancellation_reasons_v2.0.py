@@ -65,7 +65,7 @@ try:
         start_date = pd.to_datetime(start_date, format="%d/%m/%Y")
     except:
         pass
-    if start_date == "dd/mm/yyyy":
+    if start_date == "dd/mm/yyyy" or start_date == "":
         pass
     else:
         reasons_df = reasons_df.query("Date_Purchased > @start_date")
@@ -75,7 +75,7 @@ try:
         end_date = pd.to_datetime(end_date, format="%d/%m/%Y")
     except:
         pass
-    if end_date == "dd/mm/yyyy":
+    if end_date == "dd/mm/yyyy" or end_date == "":
         pass
     else:
         reasons_df = reasons_df.query("Date_Purchased < @end_date")
