@@ -7,6 +7,8 @@ st.subheader("Only shipped orders are in the report")
 st.text("'WF Stock, Fulfillment by Amazon' and 'Sell Yours Seller' suppliers are not included")
 st.subheader("Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
 
+st.sidebar.header("Filters")
+
 st.markdown('---')
 
 option = st.selectbox('Select month',('','Jun 2022', 'Jul 2022', 'Aug 2022'))
@@ -59,8 +61,6 @@ try:
     data['Delivery_Date'] = data['Delivery_Date'].dt.date
 
     #####################
-
-    st.sidebar.header("Filters")
 
     start_date = st.sidebar.text_input("Start date", "dd/mm/yyyy")
     try:
