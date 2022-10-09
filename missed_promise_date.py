@@ -11,22 +11,21 @@ st.sidebar.header("Filters")
 
 st.markdown('---')
 
-option = st.selectbox('Select month',('','Jun 2022', 'Jul 2022', 'Aug 2022'))
+#option = st.selectbox('Select month',('','Jun 2022', 'Jul 2022', 'Aug 2022'))
 
-file = st.file_uploader("Or drag and drop a file")
+file = st.file_uploader("")
 
-if option == '':
-    try:
-        data_raw = pd.read_csv(file)
-    except:
-        st.header("Select a month or upload a file")
-else:
-    file = f'https://raw.githubusercontent.com/csknyy/worldfront/main/All_{option[:3]}_2022_orders.csv'
+try:
     data_raw = pd.read_csv(file)
+except:
+    pass
+    #if option == '':
+    #st.header("Upload a file")
+    #else:
+    #    file = f'https://raw.githubusercontent.com/csknyy/worldfront/main/All_{option[:3]}_2022_orders.csv'
+    #    data_raw = pd.read_csv(file)
 
 st.markdown('---')
-
-#data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_promise_date_test.csv")
 
 try:
     data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
