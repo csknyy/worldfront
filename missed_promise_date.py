@@ -3,16 +3,28 @@ import streamlit as st
 
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
-try:
-    st.subheader("Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
-    file = st.file_uploader("Drag and drop a file")
-    st.subheader("Only shipped orders are in the report")
-    st.text("'WF Stock, Fulfillment by Amazon' and 'Sell Yours Seller' suppliers are not included")
-    st.markdown('---')
+st.subheader("Only shipped orders are in the report")
+st.text("'WF Stock, Fulfillment by Amazon' and 'Sell Yours Seller' suppliers are not included")
+st.subheader("Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
+
+st.markdown('---')
+
+option = st.selectbox('Select month',('','Jun 2022', 'Jul 2022', 'Aug 2022'))
+
+file = st.file_uploader("Or drag and drop a file")
+
+if option == '':
+    try:
+        data_raw = pd.read_csv(file)
+    except:
+        st.header("Select a month or upload a file")
+else:
+    file = f'https://raw.githubusercontent.com/csknyy/worldfront/main/All_{option[:3]}_2022_orders.csv'
     data_raw = pd.read_csv(file)
 
-except:
-    data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_promise_date_test.csv")
+st.markdown('---')
+
+#data_raw = pd.read_csv("https://raw.githubusercontent.com/csknyy/worldfront/main/missed_promise_date_test.csv")
 
 try:
     data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
@@ -342,5 +354,6 @@ try:
     st.write(data.astype(str))
 
 except:
-    st.subheader("An error occurred. Please restart.")
-    st.markdown('---')
+    pass
+    #st.subheader("An error occurred. Please restart.")
+    #st.markdown('---')
