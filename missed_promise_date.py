@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
 st.subheader("Only shipped orders are in the report")
-st.text("'WF Stock, Fulfillment by Amazon' and 'Sell Yours Seller' suppliers are not included")
+st.text("Fishpond orders and 'WF Stock, Fulfillment by Amazon' suppliers are not included")
 st.subheader("Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
 
 st.sidebar.header("Filters")
