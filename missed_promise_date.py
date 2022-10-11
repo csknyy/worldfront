@@ -44,6 +44,9 @@ try:
     data['Supplier'] = data['Supplier'].fillna("NaN")
     data['Supplier'] = [i.replace("Do Not Use - ","") for i in data['Supplier']]
 
+    data = data[~(data['Channel'].str.contains("Fishpond"))]
+    data['Channel'] = [i.replace('Ebay','eBay') for i in data['Channel']]
+
     data['Priced_at_supplier'] = data['Priced_at_supplier'].fillna("NaN")
     data['Priced_at_supplier'] = [i.replace("Do Not Use - ","") for i in data['Priced_at_supplier']]
 
