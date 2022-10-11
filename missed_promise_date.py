@@ -132,7 +132,7 @@ try:
         supplier = supplier_opt
 
     try:
-        data = data.query("Channel == @channel & Priced_at_supplier_fc == @priced_at_supplier_fc & Supplier_fc == @supplier_fc & Priced_at_supplier == @pri_supplier & Supplier == @supplier")
+        data = data.query("Country == @country & Channel == @channel & Priced_at_supplier_fc == @priced_at_supplier_fc & Supplier_fc == @supplier_fc & Priced_at_supplier == @pri_supplier & Supplier == @supplier")
     except:
         st.header("Error with query. Try again.")
 
