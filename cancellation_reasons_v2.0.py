@@ -4,8 +4,8 @@ import streamlit as st
 st.set_page_config(page_title="Cancellation reasons", layout="wide")
 
 #all_reasons = pd.read_csv('https://www.coskunyay.com/worldfront/orders_cancelled.csv')
-all_cancel = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/Individual Cancellations_data.csv')
-all_restricted = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/All Restricted Item Cancellations_data.csv')
+all_cancel = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/Individual%20Cancellations_data.csv')
+all_restricted = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/All%20Restricted%20Item%20Cancellations_data.csv')
 
 all_cancel['Date_temp'] = pd.to_datetime(all_cancel['Hour of Date Purchased'], format='%B %d, %Y, %I %p')
 latest_date = str(all_cancel['Date_temp'].max())[:10].split("-")
