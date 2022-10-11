@@ -7,8 +7,12 @@ st.set_page_config(page_title="Cancellation reasons", layout="wide")
 all_cancel = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/Individual%20Cancellations_data.csv')
 all_restricted = pd.read_csv('https://raw.githubusercontent.com/csknyy/worldfront/main/All%20Restricted%20Item%20Cancellations_data.csv')
 
-all_cancel['Date_temp'] = pd.to_datetime(all_cancel['Hour of Date Purchased'], format='%B %d, %Y, %I %p')
-latest_date = str(all_cancel['Date_temp'].max())[:10].split("-")
+try:
+    all_cancel['Date_temp'] = pd.to_datetime(all_cancel[all_cancel.columns[0]], format='%B %d, %Y, %I %p')
+    latest_date = str(all_cancel['Date_temp'].max())[:10].split("-")
+except:
+    all_cancel['Date_temp'] = pd.to_datetime(all_cancel[all_cancel.columns[0]], format='%B %d, %Y')
+    latest_date = str(all_cancel['Date_temp'].max())[:10].split("-")
 
 all_restricted['Refund Reason'] = 'Restricted item'
 all_reasons = pd.concat([all_cancel, all_restricted], ignore_index=True)
@@ -17,6 +21,8 @@ all_reasons['Refund Reason'] = [i.replace("Marked shipped but unable to fulfil",
 all_reasons['Refund Reason'] = [i.replace("Unable to fulfill","Unable to fulfil") for i in all_reasons['Refund Reason']]
 
 all_reasons = all_reasons.loc[:,['Order ID','Products Name','Refund Reason']]
+
+all_reasons = all_reasons.drop_duplicates(subset=['Order ID', 'Products Name'], keep='first')
 
 cols = all_reasons.columns.to_list()
 for i in range(len(cols)):
