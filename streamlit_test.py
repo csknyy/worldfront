@@ -19,19 +19,24 @@ try:
 
     data.columns = cols
 
+    data['Channel'] = [i.replace('Ebay','eBay') for i in data['Channel']]
     data['Order_Status'] = [i.replace("Canceled", "Cancelled") for i in data['Order_Status']]
-
-    data['Date'] = [datetime.datetime.strptime(i,'%d/%m/%Y %H:%M:%S') for i in data['Date_Purchased']]
-    data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y %H:%M:%S")
-    #data['Date'] = [i.normalize() for i in data['Date']]
+    try:
+        data['Date'] = [datetime.datetime.strptime(i,'%d/%m/%Y %H:%M:%S') for i in data['Date_Purchased']]
+        data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y %H:%M:%S")
+    except:
+        data['Date'] = [datetime.datetime.strptime(i, '%d/%m/%Y %H:%M') for i in data['Date_Purchased']]
+        data["Date_Purchased"] = pd.to_datetime(data["Date_Purchased"], format="%d/%m/%Y %H:%M")
+    data['Barcode'] = data['Barcode'].astype('str')
     data['Date'] = data['Date'].dt.date
 
-
     data = data.fillna("NaN")
-    try:
-        del data["Image"]
-    except:
-        pass
+
+    for i in ["Image","Total","Order_Item_ID","Promise_Date","Shipped_Date","Delivery_Date"]:
+        try:
+            del data[i]
+        except:
+            pass
 
     cols = data.columns.to_list()
 
@@ -61,7 +66,9 @@ try:
 
     status_opt = [str(i) for i in data["Order_Status"].unique()]
     status_opt.sort()
-    status = st.sidebar.multiselect("Order Status",options = status_opt)
+    status = st.sidebar.multiselect("Order Status",options = status_opt,default=['Shipped','On Order','Pending','Processing'])
+    #status = st.sidebar.multiselect("Order Status",options = status_opt)
+
     channel_opt = [str(i) for i in data["Channel"].unique()]
     channel_opt.sort()
     channel = st.sidebar.multiselect("Channel",options = channel_opt)
@@ -103,21 +110,25 @@ try:
         columns = [i for i in cols]
 
     data_selection = data.query("Order_Status == @status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
+
+    del data
+
     data_selection = data_selection[columns]
 
-    data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
-    data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
+    #data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
+    #data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
     data_groupby = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']]
     data_groupby = data_groupby.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
     data_groupby['Rev per Qty'] = data_groupby['Revenue (USD)'] / data_groupby['Qty']
+    data_groupby = data_groupby.reset_index().sort_values(by='Qty',ascending=False)
 
-    if len(status) == 5:
-        pass
-    else:
-        data_groupby['All status Total Sold Qty'] = data_temp1['Total Qty']
-        data_groupby['All status Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
-        data_groupby['Rev per Qty (All)'] = data_groupby['All status Total Revenue (USD)'] / data_groupby['All status Total Sold Qty']
-        data_groupby = data_groupby.reset_index().sort_values(by='Qty',ascending=False)
+    #if len(status) == 5:
+    #    pass
+    #else:
+    #    data_groupby['All status Total Sold Qty'] = data_temp1['Total Qty']
+    #    data_groupby['All status Total Revenue (USD)'] = data_temp1['Total Revenue (USD)']
+    #    data_groupby['Rev per Qty (All)'] = data_groupby['All status Total Revenue (USD)'] / data_groupby['All status Total Sold Qty']
+    #    data_groupby = data_groupby.reset_index().sort_values(by='Qty',ascending=False)
 
     st.markdown("---")
 
@@ -125,8 +136,8 @@ try:
         st.subheader(f"Grouped by {group_by}")
         st.write(data_groupby)
 
-        date_groupby_bar = data_groupby.groupby(by='Date').sum()['Revenue (USD)']
-        st.bar_chart(date_groupby_bar)
+        #date_groupby_bar = data_groupby.groupby(by='Date').sum()['Revenue (USD)']
+        st.bar_chart(data_groupby.groupby(by='Date').sum()['Revenue (USD)'])
 
         #total_revenue = data_selection["Total_USD"].sum()
         #total_revenue = int(total_revenue * 100) / 100
@@ -168,40 +179,55 @@ try:
     #st.set_option('deprecation.showPyplotGlobalUse', False)
     #st.pyplot()
 
-    channel_group = data_selection.groupby(by='Channel').sum()[['Qty','Total_USD']]
+    channel_group = data_selection.groupby(by='Channel').sum()[['Qty','Total_USD']].copy()
+    #channel_group['Qty %'] = [i*100/sum(channel_group['Qty']) for i in channel_group['Qty']]
+    #channel_group['Total_USD %'] = [i*100/sum(channel_group['Total_USD']) for i in channel_group['Total_USD']]
+    #channel_group = channel_group[['Qty','Qty %','Total_USD','Total_USD %']]
     channel_group = channel_group.sort_values(by='Qty',ascending=False)
 
-    category_group = data_selection.groupby(by='Category').sum()[['Qty','Total_USD']]
+    category_group = data_selection.groupby(by='Category').sum()[['Qty','Total_USD']].copy()
+    #category_group['Qty %'] = [int(i * 10000 / sum(category_group['Qty'])) / 100 for i in category_group['Qty']]
+    #category_group['Total_USD %'] = [int(i * 10000 / sum(category_group['Total_USD'])) / 100 for i in category_group['Total_USD']]
+    #category_group = category_group[['Qty', 'Qty %', 'Total_USD', 'Total_USD %']]
     category_group = category_group.sort_values(by='Qty',ascending=False)
 
-    barcode_group = data_selection.groupby(by='Barcode').sum()[['Qty','Total_USD']]
+    barcode_group = data_selection.groupby(by='Barcode').sum()[['Qty','Total_USD']].copy()
+    #barcode_group['Qty %'] = [int(i * 10000 / sum(barcode_group['Qty'])) / 100 for i in barcode_group['Qty']]
+    #barcode_group['Total_USD %'] = [int(i * 10000 / sum(barcode_group['Total_USD'])) / 100 for i in barcode_group['Total_USD']]
+    #barcode_group = barcode_group[['Qty', 'Qty %', 'Total_USD', 'Total_USD %']]
     barcode_group = barcode_group.sort_values(by='Qty',ascending=False)
 
-    supplier_group = data_selection.groupby(by='Supplier').sum()[['Qty','Total_USD']]
+    supplier_group = data_selection.groupby(by='Supplier').sum()[['Qty','Total_USD']].copy()
+    #supplier_group['Qty %'] = [int(i * 10000 / sum(supplier_group['Qty'])) / 100 for i in supplier_group['Qty']]
+    #supplier_group['Total_USD %'] = [int(i * 10000 / sum(supplier_group['Total_USD'])) / 100 for i in supplier_group['Total_USD']]
+    #supplier_group = supplier_group[['Qty', 'Qty %', 'Total_USD', 'Total_USD %']]
     supplier_group = supplier_group.sort_values(by='Qty',ascending=False)
 
-    pri_supplier_group = data_selection.groupby(by='Priced_At_supplier').sum()[['Qty','Total_USD']]
+    pri_supplier_group = data_selection.groupby(by='Priced_At_supplier').sum()[['Qty','Total_USD']].copy()
+    #pri_supplier_group['Qty %'] = [int(i * 10000 / sum(pri_supplier_group['Qty'])) / 100 for i in pri_supplier_group['Qty']]
+    #pri_supplier_group['Total_USD %'] = [int(i * 10000 / sum(pri_supplier_group['Total_USD'])) / 100 for i in pri_supplier_group['Total_USD']]
+    #pri_supplier_group = pri_supplier_group[['Qty', 'Qty %', 'Total_USD', 'Total_USD %']]
     pri_supplier_group = pri_supplier_group.sort_values(by='Qty',ascending=False)
 
     #channel_group.plot(kind = 'barh')
 
-    left_column, middle_column, right_column = st.columns(3)
+    st.subheader("Channel")
+    st.dataframe(channel_group)
+
+    left_column, right_column = st.columns(2)
     with left_column:
-        st.subheader("Channel")
-        st.dataframe(channel_group)
-    with middle_column:
         st.subheader("Category")
         st.dataframe(category_group)
     with right_column:
         st.subheader("Barcode")
         st.dataframe(barcode_group)
 
-    left_column, middle_column, right_column = st.columns(3)
+    left_column, right_column = st.columns(2)
     with left_column:
         st.subheader("Supplier")
         st.dataframe(supplier_group)
         st.markdown("Keep in mind that the supplier is NaN because the order hasn't been supplied.")
-    with middle_column:
+    with right_column:
         st.subheader("Priced at supplier")
         st.dataframe(pri_supplier_group)
 
