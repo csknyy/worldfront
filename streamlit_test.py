@@ -66,7 +66,7 @@ try:
 
     status_opt = [str(i) for i in data["Order_Status"].unique()]
     status_opt.sort()
-    status = st.sidebar.multiselect("Order Status",options = status_opt,default=['Shipped','On Order','Pending','Processing'])
+    status = st.sidebar.multiselect("Order Status",options = status_opt,default=status_opt)
     #status = st.sidebar.multiselect("Order Status",options = status_opt)
 
     channel_opt = [str(i) for i in data["Channel"].unique()]
@@ -137,7 +137,7 @@ try:
         st.write(data_groupby)
 
         #date_groupby_bar = data_groupby.groupby(by='Date').sum()['Revenue (USD)']
-        st.bar_chart(data_groupby.groupby(by='Date').sum()['Revenue (USD)'])
+        st.bar_chart(data_groupby.groupby(by='Date').sum()['Revenue (USD)'],width=True)
 
         #total_revenue = data_selection["Total_USD"].sum()
         #total_revenue = int(total_revenue * 100) / 100
