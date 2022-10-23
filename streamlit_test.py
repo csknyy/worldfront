@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import datetime
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Orders List summary tool", layout="wide")
 
@@ -60,7 +60,7 @@ try:
     else:
         data = data.query("Date_Purchased < @end_date")
 
-    group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status'], default = ['Date'])
+    group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status','Item_Status'], default = ['Date'])
     st.sidebar.markdown("---")
     st.sidebar.header("Filters")
 
@@ -68,6 +68,10 @@ try:
     status_opt.sort()
     status = st.sidebar.multiselect("Order Status",options = status_opt,default=status_opt)
     #status = st.sidebar.multiselect("Order Status",options = status_opt)
+
+    item_status_opt = [str(i) for i in data["Item_Status"].unique()]
+    item_status_opt.sort()
+    item_status = st.sidebar.multiselect("Item Status", options=item_status_opt, default=item_status_opt)
 
     channel_opt = [str(i) for i in data["Channel"].unique()]
     channel_opt.sort()
@@ -91,6 +95,9 @@ try:
     if len(status) == 0:
         status = [i for i in data["Order_Status"].unique()]
 
+    if len(item_status) == 0:
+        item_status = [i for i in data["Item_Status"].unique()]
+
     if len(channel) == 0:
         channel = [i for i in data["Channel"].unique()]
 
@@ -109,7 +116,7 @@ try:
     if len(columns) == 0:
         columns = [i for i in cols]
 
-    data_selection = data.query("Order_Status == @status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
+    data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
 
     del data
 
@@ -136,8 +143,10 @@ try:
         st.subheader(f"Grouped by {group_by}")
         st.write(data_groupby)
 
-        #date_groupby_bar = data_groupby.groupby(by='Date').sum()['Revenue (USD)']
-        st.bar_chart(data_groupby.groupby(by='Date').sum()['Revenue (USD)'],width=True)
+        date_groupby_bar = data_groupby.groupby(by='Date').sum()['Revenue (USD)']
+        #st.bar_chart(date_groupby_bar, width = len(date_groupby_bar) * 50, use_container_width = False)
+        st.bar_chart(date_groupby_bar)
+        del date_groupby_bar
 
         #total_revenue = data_selection["Total_USD"].sum()
         #total_revenue = int(total_revenue * 100) / 100
