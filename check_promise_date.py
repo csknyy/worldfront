@@ -144,4 +144,4 @@ try:
     st.dataframe(data)
 
 except:
-    st.header('An error occured. Please try again.')
+    st.header('Please upload a file')
