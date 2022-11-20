@@ -52,7 +52,7 @@ try:
     reasons_df['Barcode'] = [str(int(i)) for i in data_can['Barcode']]
     reasons_df['Channel'] = [i for i in data_can['Channel']]
     reasons_df['Priced_at_supplier'] = [i for i in data_can['Priced_At_supplier']]
-    reasons_df['Priced_at_supplier'].fillna("WF Stock, Fulfillment by Amazon", inplace = True)
+    reasons_df['Priced_at_supplier'].fillna("NaN", inplace = True)
 
     reasons = []
     for i in data_can['Order_ID']:
