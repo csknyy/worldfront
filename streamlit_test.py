@@ -76,6 +76,9 @@ try:
     channel_opt = [str(i) for i in data["Channel"].unique()]
     channel_opt.sort()
     channel = st.sidebar.multiselect("Channel",options = channel_opt)
+    category_opt = [str(i) for i in data["Category"].unique()]
+    category_opt.sort()
+    category = st.sidebar.multiselect("Category", options=category_opt)
     supplier_opt = [str(i) for i in data["Supplier"].unique()]
     supplier_opt.sort()
     supplier = st.sidebar.multiselect("Supplier",options = supplier_opt)
@@ -101,6 +104,9 @@ try:
     if len(channel) == 0:
         channel = [i for i in data["Channel"].unique()]
 
+    if len(category) == 0:
+        channel = [i for i in data["Category"].unique()]
+
     if len(supplier) == 0:
         supplier = [i for i in data["Supplier"].unique()]
 
@@ -116,7 +122,7 @@ try:
     if len(columns) == 0:
         columns = [i for i in cols]
 
-    data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
+    data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Category == @category & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
 
     del data
 
