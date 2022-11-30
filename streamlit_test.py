@@ -250,7 +250,16 @@ try:
 
     st.subheader(f"Filtered - Ungrouped")
 
+    del data_selection['Date']
+
     st.dataframe(data_selection)
+
+    def convert_df(df):
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(data_selection)
+
+    st.download_button(label="Download data as CSV",data=csv,file_name='Filtered - Ungrouped.csv',mime='text/csv')
 
 except:
     st.subheader("Upload a file - Don't forget to add the 'Priced At Supplier' column before downloading the report")
