@@ -105,7 +105,7 @@ try:
         channel = [i for i in data["Channel"].unique()]
 
     if len(category) == 0:
-        channel = [i for i in data["Category"].unique()]
+        category = [i for i in data["Category"].unique()]
 
     if len(supplier) == 0:
         supplier = [i for i in data["Supplier"].unique()]
