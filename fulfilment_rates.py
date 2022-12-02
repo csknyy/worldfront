@@ -51,12 +51,12 @@ try:
 
     status_opt = [str(i) for i in data["Order_Status"].unique()]
     status_opt.sort()
-    status = st.sidebar.multiselect("Order Status",options = status_opt,default=status_opt)
+    status = st.sidebar.multiselect("Order Status",options = status_opt)
     #status = st.sidebar.multiselect("Order Status",options = status_opt)
 
     item_status_opt = [str(i) for i in data["Item_Status"].unique()]
     item_status_opt.sort()
-    item_status = st.sidebar.multiselect("Item Status", options=item_status_opt, default=item_status_opt)
+    item_status = st.sidebar.multiselect("Item Status", options=item_status_opt)
 
     channel_opt = [str(i) for i in data["Channel"].unique()]
     channel_opt.sort()
@@ -78,7 +78,7 @@ try:
     country = st.sidebar.multiselect("Country",options = country_opt)
     #columns_opt = [str(i) for i in data.columns.unique()]
     #columns_opt.sort()
-    columns = st.sidebar.multiselect("Columns", options = cols, default = cols)
+    columns = st.sidebar.multiselect("Columns", options = cols)
 
     if count_filter == '+ for higher, - for lower' or count_filter == "":
         count_filter = 0
