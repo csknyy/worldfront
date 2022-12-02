@@ -78,7 +78,7 @@ try:
     country = st.sidebar.multiselect("Country",options = country_opt)
     #columns_opt = [str(i) for i in data.columns.unique()]
     #columns_opt.sort()
-    columns = st.sidebar.multiselect("Columns", options = cols)
+    columns = st.sidebar.multiselect("Columns", options = cols, default= cols)
 
     if count_filter == '+ for higher, - for lower' or count_filter == "":
         count_filter = 0
