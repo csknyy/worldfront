@@ -6,8 +6,6 @@ st.set_page_config(page_title="Cancellation and fulfilment rates", layout="wide"
 
 st.header(f"Cancellation and fulfilment rates")
 
-pd.set_option('display.float_format', '{:.2f}'.format)
-
 file = st.file_uploader("Drag and drop a file")
 
 try:
@@ -133,10 +131,8 @@ try:
         count_list[-1].fillna(0,inplace=True)
         count_list[-1].rename(columns={"Qty": i},inplace= True)
         count_list[-1][f'{i}_%'] = count_list[-1][i] * 100 / count_list[-1]['Total']
+        count_list[-1][i] = [int(j) for j in count_list[-1][i]]
         count_list[-1] = count_list[-1].sort_values(by = i, ascending=False)
-
-    #for i in count_list:
-    #    st.dataframe(i)
 
     is_same = data_selection.groupby(by="Priced_At_supplier").sum()['Is_same']
     is_same = pd.DataFrame(is_same).sort_values(by=["Is_same"], ascending=False).reset_index()
