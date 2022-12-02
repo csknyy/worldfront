@@ -164,6 +164,12 @@ try:
     st.subheader("Applicable orders - Ungrouped")
     st.write(data_selection)
 
+    def convert_df(df):
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(data_selection)
+    st.download_button(label="Download Applicable orders - Ungrouped as .csv", data=csv, file_name='Applicable orders - Ungrouped.csv', mime='text/csv')
+
     if nan_count > 0:
         st.markdown("---")
         st.subheader("NaN orders - Ungrouped")
