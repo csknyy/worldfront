@@ -45,9 +45,11 @@ try:
     else:
         data = data.query("Date_Purchased < @end_date")
 
-    group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status','Item_Status'], default = ['Date'])
+    #group_by = st.sidebar.multiselect("Group by",options = ['Date','Barcode','Category','Country','Channel','Supplier','Priced_At_supplier','Order_Status','Item_Status'], default = ['Date'])
     st.sidebar.markdown("---")
     st.sidebar.header("Filters")
+
+    count_filter = st.sidebar.text_input("Total count", "+ for higher, - for lower")
 
     status_opt = [str(i) for i in data["Order_Status"].unique()]
     status_opt.sort()
@@ -79,6 +81,9 @@ try:
     #columns_opt = [str(i) for i in data.columns.unique()]
     #columns_opt.sort()
     columns = st.sidebar.multiselect("Columns", options = cols, default = cols)
+
+    if count_filter == '+ for higher, - for lower' or count_filter == "":
+        count_filter = 0
 
     if len(status) == 0:
         status = [i for i in data["Order_Status"].unique()]
@@ -127,7 +132,7 @@ try:
         count_list[-1] = pd.merge(sup_count, count_list[-1], on='Priced_At_supplier',how='outer')
         count_list[-1].fillna(0,inplace=True)
         count_list[-1].rename(columns={"Qty": i},inplace= True)
-        count_list[-1][f'{i}_%'] = count_list[-1][i] / count_list[-1]['Total']
+        count_list[-1][f'{i}_%'] = count_list[-1][i] * 100 / count_list[-1]['Total']
         count_list[-1] = count_list[-1].sort_values(by = i, ascending=False)
 
     #for i in count_list:
@@ -138,7 +143,7 @@ try:
     is_same["Is_same"] = [int(i) for i in is_same["Is_same"]]
 
     report0 = pd.merge(sup_count,is_same,on='Priced_At_supplier')
-    report0['Is_same_%'] = report0['Is_same'] / report0['Total']
+    report0['Is_same_%'] = report0['Is_same'] * 100 / report0['Total']
 
     for i in count_list:
         temp = i.iloc[:,[0,2,3]]
@@ -147,6 +152,16 @@ try:
     report0.fillna(0,inplace=True)
 
     report0.rename(columns={"Priced_At_supplier": "Priced at supplier"},inplace= True)
+
+    try:
+        count_filter = int(count_filter)
+        if count_filter < -0.00001:
+            count_filter = count_filter * (-1)
+            report0 = report0.query("Total < @count_filter")
+        else:
+            report0 = report0.query("Total > @count_filter")
+    except:
+        pass
 
     st.subheader('All statuses based on Priced at supplier')
     st.dataframe(report0)
