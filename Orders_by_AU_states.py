@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 import datetime
-import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Orders by state", layout="wide")
 
