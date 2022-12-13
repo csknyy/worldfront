@@ -58,7 +58,8 @@ try:
 
     state_count = data_state.groupby(by="Delivery_State").sum().sort_values(by='Qty',ascending=False).reset_index()
 
-    states = [i for i in state_count['Delivery_State'][:8]]
+    #states = [i for i in state_count['Delivery_State'][:8]]
+    states = ['NSW','VIC','QLD','WA','SA','TAS','ACT','NT']
 
 
     ################
