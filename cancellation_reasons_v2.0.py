@@ -180,6 +180,8 @@ try:
 
     #reasons_df.to_csv('Cancellation_reasons_report.csv', index=False)
 
+    st.stop()
+
 except:
     st.subheader("Upload a file")
     st.subheader("Don't forget to add the 'Priced At Supplier' column before downloading the report")

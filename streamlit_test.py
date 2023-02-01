@@ -261,6 +261,8 @@ try:
 
     st.download_button(label="Download data as CSV",data=csv,file_name='Filtered - Ungrouped.csv',mime='text/csv')
 
+    st.stop()
+
 except:
     st.subheader("Upload a file - Don't forget to add the 'Priced At Supplier' column before downloading the report")
     st.subheader("Or select an option from the Group by drop list")

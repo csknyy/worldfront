@@ -143,5 +143,7 @@ try:
 
     st.dataframe(data)
 
+    st.stop()
+
 except:
     st.header('Please upload a file')

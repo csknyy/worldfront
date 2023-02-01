@@ -181,5 +181,7 @@ try:
 
     st.download_button(label="Download data as CSV", data=csv, file_name='Filtered - Ungrouped.csv', mime='text/csv')
 
+    st.stop()
+
 except:
     st.subheader("Upload a file - Don't forget to add the 'Delivery State' column before downloading the report")
