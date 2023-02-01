@@ -438,5 +438,7 @@ try:
 
     st.download_button(label="Download data as CSV", data=csv, file_name='Raw data.csv', mime='text/csv')
 
+    st.stop()
+
 except:
     pass
