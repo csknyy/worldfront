@@ -17,6 +17,12 @@ file = st.file_uploader("")
 
 try:
     data_raw = pd.read_csv(file)
+
+    ##############################################
+    def convert_df(df):
+        return df.to_csv().encode('utf-8')
+    ##############################################
+
 except:
     pass
     #if option == '':
@@ -237,7 +243,12 @@ try:
     except:
         pass
 
-    st.dataframe(data_boxscore0_2.sort_values(by='Count', ascending=False).reset_index())
+    report1 = data_boxscore0_2.sort_values(by='Count', ascending=False).reset_index()
+    st.dataframe(report1)
+
+    csv = convert_df(report1)
+
+    st.download_button(label="Download data as CSV", data=csv, file_name='Priced at supplier and Supplier are same (shipped orders).csv', mime='text/csv')
 
     #################################################################################################################
 
@@ -296,7 +307,12 @@ try:
     except:
         pass
 
-    st.dataframe(data_boxscore_2.sort_values(by='Count', ascending=False).reset_index())
+    report2 = data_boxscore_2.sort_values(by='Count', ascending=False).reset_index()
+    st.dataframe(report2)
+
+    csv = convert_df(report2)
+
+    st.download_button(label="Download data as CSV", data=csv,file_name='Priced at supplier and Supplier are same (delivered orders).csv', mime='text/csv')
 
     #################################################################################################################
 
@@ -348,7 +364,12 @@ try:
     #except:
     #    pass
 
-    st.dataframe(data_boxscore1_2.sort_values(by='Count', ascending=False).reset_index())
+    report3 = data_boxscore1_2.sort_values(by='Count', ascending=False).reset_index()
+    st.dataframe(report3)
+
+    csv = convert_df(report3)
+
+    st.download_button(label="Download data as CSV", data=csv,file_name='Box Score - Priced at supplier.csv', mime='text/csv')
 
     #################################################################################################################
 
@@ -399,7 +420,12 @@ try:
     except:
         pass
 
-    st.dataframe(data_boxscore2_2.sort_values(by='Count', ascending=False).reset_index())
+    report4 = data_boxscore2_2.sort_values(by='Count', ascending=False).reset_index()
+    st.dataframe(report4)
+
+    csv = convert_df(report4)
+
+    st.download_button(label="Download data as CSV", data=csv, file_name='Box Score - Supplier.csv',mime='text/csv')
 
     st.markdown('---')
 
@@ -407,6 +433,10 @@ try:
 
     st.header("Raw data")
     st.write(data.astype(str))
+
+    csv = convert_df(data)
+
+    st.download_button(label="Download data as CSV", data=csv, file_name='Raw data.csv', mime='text/csv')
 
 except:
     pass
