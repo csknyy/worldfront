@@ -1,5 +1,8 @@
 import pandas as pd
 import streamlit as st
+import time
+
+len2 = 0
 
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
@@ -438,7 +441,13 @@ try:
 
     st.download_button(label="Download data as CSV", data=csv, file_name='Raw data.csv', mime='text/csv')
 
-    st.stop()
+
+    len1 = len(report1)
+    while len1 == len2:
+        time.sleep(1)
+
+    len2 = len1
 
 except:
     pass
+
