@@ -16,6 +16,8 @@ st.markdown('---')
 
 file = st.file_uploader("")
 
+data_raw = pd.DataFrame()
+
 try:
     data_raw = pd.read_csv(file)
 
@@ -37,8 +39,8 @@ except:
 st.markdown('---')
 
 #try:
-data = data_raw[~(data_raw['Supplier'] == "WF Stock, Fulfillment by Amazon")].copy()
-del data_raw
+data = data_raw[~(data_raw["Supplier"] == "WF Stock, Fulfillment by Amazon")].copy()
+#del data_raw
 data = data[data['Order Status'] == 'Shipped']
 data = data[data['Item Status'] == 'Shipped']
 data = data[~(data['Supplier'] == 'Sell Yours Seller')]
