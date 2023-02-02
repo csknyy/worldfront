@@ -40,9 +40,9 @@ except:
 
 st.markdown('---')
 
-stop_refresh = st.sidebar.radio("Stop refresh?",("No","Yes"))
+freeze = st.sidebar.radio("Stop refresh?",("No","Yes"))
 
-while stop_refresh == "Yes":
+while freeze == "Yes":
     time.sleep(1)
 
 try:
