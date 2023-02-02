@@ -43,7 +43,7 @@ st.markdown('---')
 freeze = st.sidebar.radio("Freeze?",("No","Yes"))
 
 while freeze == "Yes":
-    time.sleep(1)
+    time.sleep(3)
 
 try:
     data = data_raw[~(data_raw["Supplier"] == "WF Stock, Fulfillment by Amazon")].copy()
