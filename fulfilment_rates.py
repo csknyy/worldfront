@@ -192,10 +192,6 @@ try:
 
     t_cols = report0.columns.to_list()
 
-    st.dataframe(report0)
-
-    st.text(t_cols)
-
     try:
         t_values = ['Total',
                              sum(report0[t_cols[1]]),
