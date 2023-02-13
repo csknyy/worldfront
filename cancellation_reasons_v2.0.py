@@ -17,8 +17,8 @@ except:
 all_restricted['Refund Reason'] = 'Restricted item'
 all_reasons = pd.concat([all_cancel, all_restricted], ignore_index=True)
 
-all_reasons['Refund Reason'] = [i.replace("Marked shipped but unable to fulfil","Unable to fulfil") for i in all_reasons['Refund Reason']]
-all_reasons['Refund Reason'] = [i.replace("Unable to fulfill","Unable to fulfil") for i in all_reasons['Refund Reason']]
+all_reasons['Refund Reason'] = [str(i).replace("Marked shipped but unable to fulfil","Unable to fulfil") for i in all_reasons['Refund Reason']]
+all_reasons['Refund Reason'] = [str(i).replace("Unable to fulfill","Unable to fulfil") for i in all_reasons['Refund Reason']]
 
 all_reasons = all_reasons.loc[:,['Order ID','Products Name','Refund Reason']]
 
