@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
 import datetime
+import time
+
 #import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Orders List summary tool", layout="wide")
@@ -8,6 +10,12 @@ st.set_page_config(page_title="Orders List summary tool", layout="wide")
 pd.set_option('display.float_format', '{:.2f}'.format)
 
 file = st.file_uploader("Drag and drop a file")
+
+freeze = st.sidebar.radio("Freeze?",("No","Yes"))
+
+while freeze == "Yes":
+    time.sleep(3)
+
 
 try:
     data = pd.read_csv(file)
@@ -88,6 +96,7 @@ try:
     barcode_opt = [i for i in data["Barcode"].unique()]
     barcode_opt.sort()
     barcode = st.sidebar.multiselect("Barcode",options = barcode_opt)
+    exl_barcode = st.sidebar.multiselect("Exclude barcodes", options=barcode_opt)
     country_opt = [i for i in data["Country"].unique()]
     country_opt.sort()
     country = st.sidebar.multiselect("Country",options = country_opt)
@@ -116,12 +125,16 @@ try:
     if len(barcode) == 0:
         barcode = [i for i in data["Barcode"].unique()]
 
+    #if len(exl_barcode) == 0:
+    #    exl_barcode = [i for i in data["Barcode"].unique()]
+
     if len(country) == 0:
         country = [i for i in data["Country"].unique()]
 
     if len(columns) == 0:
         columns = [i for i in cols]
 
+    data = data[~data['Barcode'].isin(exl_barcode)]
     data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Category == @category & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
 
     del data
