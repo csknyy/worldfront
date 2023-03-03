@@ -150,6 +150,8 @@ try:
 
     data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Category == @category & Priced_at_supplier_fc == @priced_at_fc & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
 
+    st.dataframe(data_selection)
+
     del data
 
     #try:
@@ -301,9 +303,7 @@ try:
     csv = convert_df(report1)
     st.download_button(label="Download all statuses by FC as .csv", data=csv, file_name='All statuses based on Priced at supplier FC.csv', mime='text/csv')
 
-
     st.markdown("---")
-
 
     st.subheader(f"Filtered - Ungrouped")
     st.dataframe(data_selection)
