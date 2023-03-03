@@ -33,6 +33,10 @@ try:
     data['Channel'] = [i.replace('Ebay', 'eBay') for i in data['Channel']]
     data['Order_Status'] = [i.replace("Canceled", "Cancelled") for i in data['Order_Status']]
 
+    data['Order_ID'] = data['Order_ID'].astype(str)
+    data['Order_Item_ID'] = data['Order_Item_ID'].astype(str)
+    data['Barcode'] = data['Barcode'].astype(str)
+
     data = data.fillna("NaN")
 
     data["Priced_at_supplier_fc"] = [i[:3] for i in data["Priced_At_supplier"]]
@@ -149,8 +153,6 @@ try:
         columns = [i for i in cols]
 
     data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Category == @category & Priced_at_supplier_fc == @priced_at_fc & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
-
-    st.dataframe(data_selection)
 
     del data
 
