@@ -128,8 +128,14 @@ try:
     if len(supplier) == 0:
         supplier = [i for i in data["Supplier"].unique()]
 
+    if len(supplier_fc) == 0:
+        supplier_fc = [i for i in data["Supplier_fc"].unique()]
+
     if len(pri_supplier) == 0:
         pri_supplier = [i for i in data["Priced_At_supplier"].unique()]
+
+    if len(priced_at_fc) == 0:
+        priced_at_fc = [i for i in data["Priced_at_supplier_fc"].unique()]
 
     if len(barcode) == 0:
         barcode = [i for i in data["Barcode"].unique()]
@@ -144,7 +150,7 @@ try:
         columns = [i for i in cols]
 
     data = data[~data['Barcode'].isin(exl_barcode)]
-    data_selection = data.query("Order_Status == @status & Item_Status == @item_status & Channel == @channel & Category == @category & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
+    data_selection = data.query("Supplier_fc == @supplier_fc & Priced_at_supplier_fc == @priced_at_fc & Order_Status == @status & Item_Status == @item_status & Channel == @channel & Category == @category & Supplier == @supplier & Priced_At_supplier == @pri_supplier & Barcode == @barcode & Country == @country")
 
     del data
 
