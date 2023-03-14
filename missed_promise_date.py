@@ -5,15 +5,13 @@ import time
 st.set_page_config(page_title="Missed Promise Date", layout="wide")
 
 st.subheader("Only shipped orders are in the report")
-st.text("Fishpond orders and 'WF Stock, Fulfillment by Amazon' suppliers are not included")
+st.text("'WF Stock, Fulfillment by Amazon' suppliers are not included")
 st.subheader(
     "Don't forget to add the 'Priced At Supplier', 'Shipped Date' and 'Delivery Date' columns before downloading the report")
 
 st.sidebar.subheader(" ")
 
 st.markdown('---')
-
-# option = st.selectbox('Select month',('','Jun 2022', 'Jul 2022', 'Aug 2022'))
 
 file = st.file_uploader("")
 
@@ -41,10 +39,10 @@ except:
 st.markdown('---')
 
 freeze = st.sidebar.radio("Freeze?",("No","Yes"))
-
 while freeze == "Yes":
     time.sleep(3)
 
+###########
 try:
     data = data_raw[~(data_raw["Supplier"] == "WF Stock, Fulfillment by Amazon")].copy()
     # del data_raw
@@ -63,7 +61,8 @@ try:
     data['Supplier'] = data['Supplier'].fillna("NaN")
     data['Supplier'] = [i.replace("Do Not Use - ", "") for i in data['Supplier']]
 
-    data = data[~(data['Channel'].str.contains("Fishpond"))]
+    #data = data[~(data['Channel'].str.contains("Fishpond"))]
+
     data['Channel'] = [i.replace('Ebay', 'eBay') for i in data['Channel']]
 
     data['Priced_at_supplier'] = data['Priced_at_supplier'].fillna("NaN")
@@ -83,6 +82,10 @@ try:
 
     #####################
     st.sidebar.header("Filters")
+
+    remove_fishpond = st.sidebar.radio("Remove Fishpond orders?",("No","Yes"))
+    if remove_fishpond == "Yes":
+        data = data[~(data['Channel'].str.contains("Fishpond"))]
 
     start_date = st.sidebar.text_input("Start date", "dd/mm/yyyy")
     try:
