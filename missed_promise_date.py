@@ -242,6 +242,11 @@ data_boxscore0['Promise_Shipped'] = data_boxscore0['Promise_Date'] - data_boxsco
 data_boxscore0['Promise_Shipped'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                      data_boxscore0['Promise_Shipped']]
 
+st.dataframe(data_boxscore0)
+
+data_boxscore0 = data_boxscore0.reset_index()
+del data_boxscore0['index']
+
 data_boxscore0_2 = data_boxscore0.groupby(by='Priced_at_supplier').sum()
 
 data_boxscore0_2.loc['Total', :] = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']),
@@ -282,6 +287,10 @@ st.header('Box Score - Priced at supplier and Supplier are same (delivered order
 data_boxscore = data[~(data['Delivery_Date'].isna())][
     ['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier',
      'Supplier']]
+
+data_boxscore = data_boxscore.reset_index()
+del data_boxscore['index']
+
 data_boxscore = data_boxscore[~(data['Promise_Date'].isna())]
 data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
 
