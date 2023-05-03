@@ -313,11 +313,11 @@ data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60
 
 st.dataframe(data_boxscore)
 
-data_boxscore_2 = data_boxscore.iloc[:,3:].groupby(by='Priced_at_supplier').sum()
+data_boxscore_2 = data_boxscore.iloc[:,4:].groupby(by='Priced_at_supplier').sum()
 
 st.dataframe(data_boxscore_2)
 
-data_boxscore_2.loc['Total', :] = ['Total','Total',sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']),
+data_boxscore_2.loc['Total', :] = ['Total','Total','Total',sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']),
                                    sum(data_boxscore['Delivered_days']), sum(data_boxscore['Promised_days']),
                                    sum(data_boxscore['Promise_Delivery'])]
 
