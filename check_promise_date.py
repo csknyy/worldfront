@@ -120,9 +120,13 @@ data_boxscore['Count'] = 1
 data_boxscore['Promised_days'] = data_boxscore['Promise_Date'].subtract(data_boxscore['Date_Purchased'])
 data_boxscore['Promised_days'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in data_boxscore['Promised_days']]
 
-data_boxscore = data_boxscore.groupby(by='Priced_at_supplier').sum()
+st.dataframe(data_boxscore)
 
-data_boxscore.loc['Total',:] = [sum(data_boxscore['Count']), sum(data_boxscore['Promised_days'])]
+data_boxscore = data_boxscore.iloc[:,3:].groupby(by='Priced_at_supplier').sum()
+
+st.dataframe(data_boxscore)
+
+data_boxscore.loc['Total',:] = ['Total',sum(data_boxscore['Count']), sum(data_boxscore['Promised_days'])]
 
 data_boxscore['Avg_Promised_days'] = (data_boxscore['Promised_days'] / data_boxscore['Count']).round(2)
 
