@@ -311,11 +311,7 @@ data_boxscore['Promise_Delivery'] = data_boxscore['Promise_Date'] - data_boxscor
 data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                      data_boxscore['Promise_Delivery']]
 
-st.dataframe(data_boxscore)
-
 data_boxscore_2 = data_boxscore.iloc[:,4:].groupby(by='Priced_at_supplier').sum()
-
-st.dataframe(data_boxscore_2)
 
 data_boxscore_2.loc['Total', :] = ['Total','Total',sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']),
                                    sum(data_boxscore['Delivered_days']), sum(data_boxscore['Promised_days']),
@@ -381,9 +377,9 @@ data_boxscore1['Promise_Delivery'] = data_boxscore1['Promise_Date'] - data_boxsc
 data_boxscore1['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                       data_boxscore1['Promise_Delivery']]
 
-data_boxscore1_2 = data_boxscore1.groupby(by='Priced_at_supplier').sum()
+data_boxscore1_2 = data_boxscore1.iloc[:,3:].groupby(by='Priced_at_supplier').sum()
 
-data_boxscore1_2.loc['Total', :] = [sum(data_boxscore1['Count']), sum(data_boxscore1['Shipped_days']),
+data_boxscore1_2.loc['Total', :] = ['Total', 'Total', sum(data_boxscore1['Count']), sum(data_boxscore1['Shipped_days']),
                                     sum(data_boxscore1['Delivered_days']), sum(data_boxscore1['Promised_days']),
                                     sum(data_boxscore1['Promise_Delivery'])]
 
