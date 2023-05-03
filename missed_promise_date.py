@@ -379,7 +379,7 @@ data_boxscore1['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 6
 
 st.dataframe(data_boxscore1)
 
-data_boxscore1_2 = data_boxscore1.iloc[:,3:].groupby(by='Priced_at_supplier').sum()
+data_boxscore1_2 = data_boxscore1.iloc[:,4:].groupby(by='Priced_at_supplier').sum()
 
 st.dataframe(data_boxscore1_2)
 
