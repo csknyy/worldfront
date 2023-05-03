@@ -442,9 +442,9 @@ data_boxscore2['Promise_Delivery'] = data_boxscore2['Promise_Date'] - data_boxsc
 data_boxscore2['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                       data_boxscore2['Promise_Delivery']]
 
-data_boxscore2_2 = data_boxscore2.groupby(by='Supplier').sum()
+data_boxscore2_2 = data_boxscore2.iloc[:,4:].groupby(by='Supplier').sum()
 
-data_boxscore2_2.loc['Total', :] = [sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']),
+data_boxscore2_2.loc['Total', :] = ['Total', sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']),
                                     sum(data_boxscore2['Delivered_days']), sum(data_boxscore2['Promised_days']),
                                     sum(data_boxscore2['Promise_Delivery'])]
 
