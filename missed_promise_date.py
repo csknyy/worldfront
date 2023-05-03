@@ -246,7 +246,8 @@ data_boxscore0_2 = data_boxscore0.iloc[:,3:].groupby(by='Priced_at_supplier').su
 
 st.dataframe(data_boxscore0_2)
 
-data_boxscore0_2.loc['Total', :] = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']), sum(data_boxscore0['Promise_Shipped'])]
+data_boxscore0_2.loc['Total', :] = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']),
+                                    sum(data_boxscore0['Promised_days']), sum(data_boxscore0['Promise_Shipped'])]
 
 data_boxscore0_2['Count'] = [int(i) for i in data_boxscore0_2['Count']]
 
@@ -284,11 +285,12 @@ data_boxscore = data[~(data['Delivery_Date'].isna())][
     ['Date_Purchased', 'Promise_Date', 'Shipped_Date', 'Delivery_Date', 'Channel', 'Priced_at_supplier',
      'Supplier']]
 
-data_boxscore = data_boxscore.reset_index()
-del data_boxscore['index']
+try:
+    data_boxscore = data_boxscore[~(data['Promise_Date'].isna())]
+    data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
+except:
+    data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
 
-data_boxscore = data_boxscore[~(data['Promise_Date'].isna())]
-data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
 
 for i in data_boxscore.columns[:4]:
     data_boxscore[i] = pd.to_datetime(data_boxscore[i])
