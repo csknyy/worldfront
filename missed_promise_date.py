@@ -244,6 +244,8 @@ data_boxscore0['Promise_Shipped'] = [int(100 * i.total_seconds() / (24 * 60 * 60
 
 data_boxscore0_2 = data_boxscore0.iloc[:,3:].groupby(by='Priced_at_supplier').sum()
 
+st.dataframe(data_boxscore0_2)
+
 data_boxscore0_2.loc['Total'] = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']), sum(data_boxscore0['Promised_days']), sum(data_boxscore0['Promise_Shipped'])]
 
 data_boxscore0_2['Count'] = [int(i) for i in data_boxscore0_2['Count']]
