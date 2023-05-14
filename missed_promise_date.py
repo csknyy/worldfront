@@ -249,7 +249,7 @@ data_boxscore0_2 = data_boxscore0.iloc[:,3:].groupby(by='Priced_at_supplier').su
 total = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']), sum(data_boxscore0['Promised_days']), sum(data_boxscore0['Promise_Shipped'])]
 
 try:
-    data_boxscore0_2.loc['Total'] = 'Total' + total
+    data_boxscore0_2.loc['Total'] = total.insert('Total',0)
 except:
     data_boxscore0_2.loc['Total'] = total
 
