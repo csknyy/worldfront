@@ -322,7 +322,7 @@ try:
     try:
         data_boxscore_2.loc['Total', :] = [sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']), sum(data_boxscore['Delivered_days']), sum(data_boxscore['Transport_days']),sum(data_boxscore['Promised_days']),sum(data_boxscore['Promise_Delivery'])]
     except:
-        data_boxscore_2.loc['Total', :] = ['Total', 'Total', sum(data_boxscore['Count']),sum(data_boxscore['Shipped_days']),sum(data_boxscore['Delivered_days']), sum(data_boxscore1['Transport_days']), sum(data_boxscore['Promised_days']),sum(data_boxscore['Promise_Delivery'])]
+        data_boxscore_2.loc['Total', :] = ['Total', 'Total', sum(data_boxscore['Count']),sum(data_boxscore['Shipped_days']),sum(data_boxscore['Delivered_days']), sum(data_boxscore['Transport_days']), sum(data_boxscore['Promised_days']),sum(data_boxscore['Promise_Delivery'])]
 
     data_boxscore_2['Count'] = [int(i) for i in data_boxscore_2['Count']]
 
@@ -459,7 +459,7 @@ try:
     try:
         data_boxscore2_2.loc['Total', :] = [sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']),sum(data_boxscore2['Delivered_days']), sum(data_boxscore2['Transport_days']), sum(data_boxscore2['Promised_days']), sum(data_boxscore2['Promise_Delivery'])]
     except:
-        data_boxscore2_2.loc['Total', :] = ['Total', sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']), sum(data_boxscore2['Delivered_days']), sum(data_boxscore1['Transport_days']), sum(data_boxscore2['Promised_days']), sum(data_boxscore2['Promise_Delivery'])]
+        data_boxscore2_2.loc['Total', :] = ['Total', sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']), sum(data_boxscore2['Delivered_days']), sum(data_boxscore2['Transport_days']), sum(data_boxscore2['Promised_days']), sum(data_boxscore2['Promise_Delivery'])]
 
     data_boxscore2_2['Avg_Shipped_days'] = (data_boxscore2_2['Shipped_days'] / data_boxscore2_2['Count']).round(2)
     data_boxscore2_2['Avg_Delivered_days'] = (data_boxscore2_2['Delivered_days'] / data_boxscore2_2['Count']).round(2)
