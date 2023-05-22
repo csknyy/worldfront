@@ -233,6 +233,8 @@ st.bar_chart(date_bar)
 #st.set_option('deprecation.showPyplotGlobalUse', False)
 #st.pyplot()
 
+del data_selection['Date']
+
 st.dataframe(data_selection)
 
 channel_group = data_selection.groupby(by='Channel').sum()[['Qty','Total_USD']].copy()
