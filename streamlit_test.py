@@ -235,8 +235,6 @@ st.bar_chart(date_bar)
 
 del data_selection['Date']
 
-st.dataframe(data_selection)
-
 channel_group = data_selection.groupby(by='Channel').sum()[['Qty','Total_USD']].copy()
 #channel_group['Qty %'] = [i*100/sum(channel_group['Qty']) for i in channel_group['Qty']]
 #channel_group['Total_USD %'] = [i*100/sum(channel_group['Total_USD']) for i in channel_group['Total_USD']]
