@@ -154,6 +154,11 @@ data_selection = data.query("Supplier_fc == @supplier_fc & Priced_at_supplier_fc
 
 del data
 
+try:
+    del data_selection['Date_Purchased']
+except:
+    pass
+
 data_selection = data_selection[columns]
 
 #data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
