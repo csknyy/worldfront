@@ -159,8 +159,6 @@ data_selection = data_selection[columns]
 #data_temp1 = data.groupby(by=group_by).sum()[['Qty', 'Total_USD']].sort_values(by='Qty', ascending=False)
 #data_temp1 = data_temp1.rename(columns={'Qty': 'Total Qty', 'Total_USD': 'Total Revenue (USD)'})
 
-st.dataframe(data_selection)
-
 data_groupby = data_selection.groupby(by=group_by).sum()[['Qty','Total_USD']]
 data_groupby = data_groupby.rename(columns={'Qty': 'Qty', 'Total_USD': 'Revenue (USD)'})
 data_groupby['Rev per Qty'] = data_groupby['Revenue (USD)'] / data_groupby['Qty']
