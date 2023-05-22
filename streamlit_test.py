@@ -156,6 +156,8 @@ del data
 
 data_selection = data_selection[columns]
 
+date_column = data_selection['Date_Purchased']
+
 try:
     del data_selection['Date_Purchased']
 except:
@@ -285,6 +287,8 @@ st.markdown("---")
 st.subheader(f"Filtered - Ungrouped")
 
 del data_selection['Date']
+
+data_selection.insert(0, 'Date_Purchased', date_column)
 
 st.dataframe(data_selection)
 
