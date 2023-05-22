@@ -293,8 +293,6 @@ st.markdown("---")
 
 st.subheader(f"Filtered - Ungrouped")
 
-del data_selection['Date']
-
 data_selection.insert(0, 'Date_Purchased', date_column)
 
 st.dataframe(data_selection)
