@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import datetime
 import time
+import plotly.express as px
 
 #import matplotlib.pyplot as plt
 
@@ -222,9 +223,9 @@ try:
 
     st.subheader("Daily revenue (USD)")
 
-    date_bar = data_selection.groupby(by='Date').sum()['Total_USD']
+    #date_bar = data_selection.groupby(by='Date').sum()['Total_USD']
 
-    st.bar_chart(date_bar)
+    #st.bar_chart(date_bar)
 
     #st.markdown("---")
 
@@ -268,15 +269,28 @@ try:
     #channel_group.plot(kind = 'barh')
 
     st.subheader("Channel")
+    channel_group = channel_group.reset_index()
+    #top_n_cha = st.slider("Select top channel count", 1, len(channel_group))
+    #channel_group = channel_group.iloc[:top_n_cha]
+    fig = px.pie(channel_group, values='Qty', names='Channel', title='')
+    # fig.update_traces(textinfo='label')
+    st.write(fig)
     st.dataframe(channel_group)
 
     left_column, right_column = st.columns(2)
     with left_column:
         st.subheader("Category")
+        category_group = category_group.reset_index()
+        top_n_cat = st.slider("Select top category count", 1, len(category_group))
+        category_group = category_group.iloc[:top_n_cat]
+        fig = px.pie(category_group, values='Qty', names='Category', title='')
+        #fig.update_traces(textinfo='label')
+        st.write(fig)
         st.dataframe(category_group)
     with right_column:
         st.subheader("Barcode")
         st.dataframe(barcode_group)
+
 
     left_column, right_column = st.columns(2)
     with left_column:
