@@ -18,7 +18,21 @@ file = st.file_uploader("")
 data_raw = pd.DataFrame()
 
 try:
-    data_raw = pd.read_csv(file)
+    #data_raw = pd.read_csv(file)
+    uploaded_files = st.file_uploader("Choose the CSV files", accept_multiple_files=True)
+    file_count = len(uploaded_files)
+    
+    files = [f"file{i}" for i in range(int(file_count))]
+    
+    i=0
+    for uploaded_file,file in zip(uploaded_files,files):
+        file = pd.read_csv(uploaded_file)
+        files[i] = file
+        st.write("Uploaded:", uploaded_file.name)
+        i = i+1
+    
+    st.header("Concatenated dataframes")
+    data_raw = pd.concat(files)
 
 
     ##############################################
