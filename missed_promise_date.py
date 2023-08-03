@@ -32,8 +32,7 @@ try:
         files[i] = file
         st.write("Uploaded:", uploaded_file.name)
         i = i+1
-    
-    st.header("Concatenated dataframes")
+        
     data_raw = pd.concat(files)
 
 
