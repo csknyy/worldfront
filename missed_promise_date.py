@@ -13,12 +13,14 @@ st.sidebar.subheader(" ")
 
 st.markdown('---')
 
-file = st.file_uploader("")
+##add file here
 
 data_raw = pd.DataFrame()
 
 try:
+    #file = st.file_uploader("")
     #data_raw = pd.read_csv(file)
+    
     uploaded_files = st.file_uploader("Choose the CSV files", accept_multiple_files=True)
     file_count = len(uploaded_files)
     
