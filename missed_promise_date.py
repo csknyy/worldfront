@@ -13,12 +13,27 @@ st.sidebar.subheader(" ")
 
 st.markdown('---')
 
-file = st.file_uploader("")
+##add file here
 
 data_raw = pd.DataFrame()
 
 try:
-    data_raw = pd.read_csv(file)
+    # file = st.file_uploader("")
+    # data_raw = pd.read_csv(file)
+
+    uploaded_files = st.file_uploader("Choose the CSV files", accept_multiple_files=True)
+    file_count = len(uploaded_files)
+
+    files = [f"file{i}" for i in range(int(file_count))]
+
+    i = 0
+    for uploaded_file, file in zip(uploaded_files, files):
+        file = pd.read_csv(uploaded_file)
+        files[i] = file
+        st.write("Uploaded:", uploaded_file.name)
+        i = i + 1
+
+    data_raw = pd.concat(files)
 
 
     ##############################################
@@ -38,7 +53,7 @@ except:
 
 st.markdown('---')
 
-freeze = st.sidebar.radio("Freeze?",("No","Yes"))
+freeze = st.sidebar.radio("Freeze?", ("No", "Yes"))
 while freeze == "Yes":
     time.sleep(3)
 
@@ -62,7 +77,7 @@ try:
     data['Supplier'] = data['Supplier'].fillna("NaN")
     data['Supplier'] = [i.replace("Do Not Use - ", "") for i in data['Supplier']]
 
-    #data = data[~(data['Channel'].str.contains("Fishpond"))]
+    # data = data[~(data['Channel'].str.contains("Fishpond"))]
 
     data['Channel'] = [i.replace('Ebay', 'eBay') for i in data['Channel']]
 
@@ -84,7 +99,7 @@ try:
     #####################
     st.sidebar.header("Filters")
 
-    remove_fishpond = st.sidebar.radio("Remove Fishpond orders?",("No","Yes"))
+    remove_fishpond = st.sidebar.radio("Remove Fishpond orders?", ("No", "Yes"))
     if remove_fishpond == "Yes":
         data = data[~(data['Channel'].str.contains("Fishpond"))]
 
@@ -242,14 +257,17 @@ try:
     data_boxscore0['Promise_Shipped'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                          data_boxscore0['Promise_Shipped']]
 
-    data_boxscore0_2 = data_boxscore0.iloc[:,3:].groupby(by='Priced_at_supplier').sum()
+    data_boxscore0_2 = data_boxscore0.iloc[:, 3:].groupby(by='Priced_at_supplier').sum()
 
-    #st.dataframe(data_boxscore0_2)
+    # st.dataframe(data_boxscore0_2)
 
     try:
-        data_boxscore0_2.loc['Total'] = ['Total', 'Total', sum(data_boxscore0['Count']),sum(data_boxscore0['Shipped_days']),sum(data_boxscore0['Promised_days']), sum(data_boxscore0['Promise_Shipped'])]
+        data_boxscore0_2.loc['Total'] = ['Total', 'Total', sum(data_boxscore0['Count']),
+                                         sum(data_boxscore0['Shipped_days']), sum(data_boxscore0['Promised_days']),
+                                         sum(data_boxscore0['Promise_Shipped'])]
     except:
-        data_boxscore0_2.loc['Total'] = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']), sum(data_boxscore0['Promised_days']), sum(data_boxscore0['Promise_Shipped'])]
+        data_boxscore0_2.loc['Total'] = [sum(data_boxscore0['Count']), sum(data_boxscore0['Shipped_days']),
+                                         sum(data_boxscore0['Promised_days']), sum(data_boxscore0['Promise_Shipped'])]
 
     data_boxscore0_2['Count'] = [int(i) for i in data_boxscore0_2['Count']]
 
@@ -293,7 +311,6 @@ try:
     except:
         data_boxscore = data_boxscore[data_boxscore["Priced_at_supplier"] == data_boxscore['Supplier']]
 
-
     for i in data_boxscore.columns[:4]:
         data_boxscore[i] = pd.to_datetime(data_boxscore[i])
 
@@ -317,12 +334,17 @@ try:
     data_boxscore['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                          data_boxscore['Promise_Delivery']]
 
-    data_boxscore_2 = data_boxscore.iloc[:,4:].groupby(by='Priced_at_supplier').sum()
+    data_boxscore_2 = data_boxscore.iloc[:, 4:].groupby(by='Priced_at_supplier').sum()
 
     try:
-        data_boxscore_2.loc['Total', :] = [sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']), sum(data_boxscore['Delivered_days']), sum(data_boxscore['Transport_days']),sum(data_boxscore['Promised_days']),sum(data_boxscore['Promise_Delivery'])]
+        data_boxscore_2.loc['Total', :] = [sum(data_boxscore['Count']), sum(data_boxscore['Shipped_days']),
+                                           sum(data_boxscore['Delivered_days']), sum(data_boxscore['Transport_days']),
+                                           sum(data_boxscore['Promised_days']), sum(data_boxscore['Promise_Delivery'])]
     except:
-        data_boxscore_2.loc['Total', :] = ['Total', 'Total', sum(data_boxscore['Count']),sum(data_boxscore['Shipped_days']),sum(data_boxscore['Delivered_days']), sum(data_boxscore['Transport_days']), sum(data_boxscore['Promised_days']),sum(data_boxscore['Promise_Delivery'])]
+        data_boxscore_2.loc['Total', :] = ['Total', 'Total', sum(data_boxscore['Count']),
+                                           sum(data_boxscore['Shipped_days']), sum(data_boxscore['Delivered_days']),
+                                           sum(data_boxscore['Transport_days']), sum(data_boxscore['Promised_days']),
+                                           sum(data_boxscore['Promise_Delivery'])]
 
     data_boxscore_2['Count'] = [int(i) for i in data_boxscore_2['Count']]
 
@@ -333,7 +355,8 @@ try:
     data_boxscore_2['Promise - Delivery'] = (data_boxscore_2['Promise_Delivery'] / data_boxscore_2['Count']).round(2)
 
     data_boxscore_2 = data_boxscore_2[
-        ['Count', 'Avg_Shipped_days','Avg_Transport_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Promise - Delivery']]
+        ['Count', 'Avg_Shipped_days', 'Avg_Transport_days', 'Avg_Delivered_days', 'Avg_Promised_days',
+         'Promise - Delivery']]
 
     try:
         count_filter = int(count_filter)
@@ -386,12 +409,18 @@ try:
     data_boxscore1['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                           data_boxscore1['Promise_Delivery']]
 
-    data_boxscore1_2 = data_boxscore1.iloc[:,4:].groupby(by='Priced_at_supplier').sum()
+    data_boxscore1_2 = data_boxscore1.iloc[:, 4:].groupby(by='Priced_at_supplier').sum()
 
     try:
-        data_boxscore1_2.loc['Total', :] = [sum(data_boxscore1['Count']), sum(data_boxscore1['Shipped_days']),sum(data_boxscore1['Delivered_days']), sum(data_boxscore1['Transport_days']), sum(data_boxscore1['Promised_days']),sum(data_boxscore1['Promise_Delivery'])]
+        data_boxscore1_2.loc['Total', :] = [sum(data_boxscore1['Count']), sum(data_boxscore1['Shipped_days']),
+                                            sum(data_boxscore1['Delivered_days']),
+                                            sum(data_boxscore1['Transport_days']), sum(data_boxscore1['Promised_days']),
+                                            sum(data_boxscore1['Promise_Delivery'])]
     except:
-        data_boxscore1_2.loc['Total', :] = ['Total', sum(data_boxscore1['Count']), sum(data_boxscore1['Shipped_days']),sum(data_boxscore1['Delivered_days']), sum(data_boxscore1['Transport_days']), sum(data_boxscore1['Promised_days']),sum(data_boxscore1['Promise_Delivery'])]
+        data_boxscore1_2.loc['Total', :] = ['Total', sum(data_boxscore1['Count']), sum(data_boxscore1['Shipped_days']),
+                                            sum(data_boxscore1['Delivered_days']),
+                                            sum(data_boxscore1['Transport_days']), sum(data_boxscore1['Promised_days']),
+                                            sum(data_boxscore1['Promise_Delivery'])]
 
     data_boxscore1_2['Count'] = [int(i) for i in data_boxscore1_2['Count']]
 
@@ -401,7 +430,9 @@ try:
     data_boxscore1_2['Avg_Promised_days'] = (data_boxscore1_2['Promised_days'] / data_boxscore1_2['Count']).round(2)
     data_boxscore1_2['Promise - Delivery'] = (data_boxscore1_2['Promise_Delivery'] / data_boxscore1_2['Count']).round(2)
 
-    data_boxscore1_2 = data_boxscore1_2[['Count', 'Avg_Shipped_days','Avg_Transport_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Promise - Delivery']]
+    data_boxscore1_2 = data_boxscore1_2[
+        ['Count', 'Avg_Shipped_days', 'Avg_Transport_days', 'Avg_Delivered_days', 'Avg_Promised_days',
+         'Promise - Delivery']]
 
     # try:
     count_filter = int(count_filter)
@@ -454,12 +485,18 @@ try:
     data_boxscore2['Promise_Delivery'] = [int(100 * i.total_seconds() / (24 * 60 * 60)) / 100 for i in
                                           data_boxscore2['Promise_Delivery']]
 
-    data_boxscore2_2 = data_boxscore2.iloc[:,4:].groupby(by='Supplier').sum()
+    data_boxscore2_2 = data_boxscore2.iloc[:, 4:].groupby(by='Supplier').sum()
 
     try:
-        data_boxscore2_2.loc['Total', :] = [sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']),sum(data_boxscore2['Delivered_days']), sum(data_boxscore2['Transport_days']), sum(data_boxscore2['Promised_days']), sum(data_boxscore2['Promise_Delivery'])]
+        data_boxscore2_2.loc['Total', :] = [sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']),
+                                            sum(data_boxscore2['Delivered_days']),
+                                            sum(data_boxscore2['Transport_days']), sum(data_boxscore2['Promised_days']),
+                                            sum(data_boxscore2['Promise_Delivery'])]
     except:
-        data_boxscore2_2.loc['Total', :] = ['Total', sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']), sum(data_boxscore2['Delivered_days']), sum(data_boxscore2['Transport_days']), sum(data_boxscore2['Promised_days']), sum(data_boxscore2['Promise_Delivery'])]
+        data_boxscore2_2.loc['Total', :] = ['Total', sum(data_boxscore2['Count']), sum(data_boxscore2['Shipped_days']),
+                                            sum(data_boxscore2['Delivered_days']),
+                                            sum(data_boxscore2['Transport_days']), sum(data_boxscore2['Promised_days']),
+                                            sum(data_boxscore2['Promise_Delivery'])]
 
     data_boxscore2_2['Avg_Shipped_days'] = (data_boxscore2_2['Shipped_days'] / data_boxscore2_2['Count']).round(2)
     data_boxscore2_2['Avg_Delivered_days'] = (data_boxscore2_2['Delivered_days'] / data_boxscore2_2['Count']).round(2)
@@ -467,7 +504,9 @@ try:
     data_boxscore2_2['Avg_Promised_days'] = (data_boxscore2_2['Promised_days'] / data_boxscore2_2['Count']).round(2)
     data_boxscore2_2['Promise - Delivery'] = (data_boxscore2_2['Promise_Delivery'] / data_boxscore2_2['Count']).round(2)
 
-    data_boxscore2_2 = data_boxscore2_2[['Count', 'Avg_Shipped_days', 'Avg_Transport_days', 'Avg_Delivered_days', 'Avg_Promised_days', 'Promise - Delivery']]
+    data_boxscore2_2 = data_boxscore2_2[
+        ['Count', 'Avg_Shipped_days', 'Avg_Transport_days', 'Avg_Delivered_days', 'Avg_Promised_days',
+         'Promise - Delivery']]
 
     data_boxscore2_2['Count'] = [int(i) for i in data_boxscore2_2['Count']]
 
