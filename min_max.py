@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="Min Max", layout="wide")
 
 def convert_data(data):
-    return data.to_csv().encode('utf-8')
+    return data.to_csv(index=False).encode('utf-8')
 
 uploaded_file = st.file_uploader("Choose the .csv file")
 
@@ -67,4 +67,4 @@ st.dataframe(data)
 
 csv = convert_data(data)
 
-st.download_button(label="Download data as CSV", data=csv,file_name='Min_Max_with_supplier_request.csv', mime='text/csv',index=False)
+st.download_button(label="Download data as CSV", data=csv,file_name='Min_Max_with_supplier_request.csv', mime='text/csv')
