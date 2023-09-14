@@ -40,30 +40,30 @@ def round_number_up(min_max, aws, dep):
 
 list1 = []
 
-for i in range(len(dataframe)):
-  department = dataframe['Department'][i]
-  average_weekly_sales = dataframe['Average Weekly Sales'][i]
+for i in range(len(data)):
+  department = data['Department'][i]
+  average_weekly_sales = data['Average Weekly Sales'][i]
   number = round_number_up('min',average_weekly_sales, department)
-  list1.append(max(dataframe["Current Min"][i],number))
+  list1.append(max(data["Current Min"][i],number))
 
-dataframe["Min for Upload Supplier Request"] = list1
-dataframe["Min for Upload Supplier Request1"] = list1
+data["Min for Upload Supplier Request"] = list1
+data["Min for Upload Supplier Request1"] = list1
 
 list1 = []
 
-for i in range(len(dataframe)):
-  department = dataframe['Department'][i]
-  average_weekly_sales = dataframe['Average Weekly Sales'][i]
+for i in range(len(data)):
+  department = data['Department'][i]
+  average_weekly_sales = data['Average Weekly Sales'][i]
   number = round_number_up('max',average_weekly_sales, department)
-  list1.append(max(dataframe["Current Max"][i],number))
+  list1.append(max(data["Current Max"][i],number))
 
-dataframe["Max for Upload Supplier Request"] = list1
-dataframe["Max for Upload Supplier Request1"] = list1
+data["Max for Upload Supplier Request"] = list1
+data["Max for Upload Supplier Request1"] = list1
 
-for i in range(len(dataframe)):
-  if dataframe['Current Min'][i] == dataframe['Min for Upload Supplier Request'][i] and dataframe['Current Max'][i] == dataframe['Max for Upload Supplier Request'][i]:
-    dataframe['Min for Upload Supplier Request'][i] = ""
-    dataframe['Max for Upload Supplier Request'][i] = ""
+for i in range(len(data)):
+  if data['Current Min'][i] == data['Min for Upload Supplier Request'][i] and data['Current Max'][i] == data['Max for Upload Supplier Request'][i]:
+    data['Min for Upload Supplier Request'][i] = ""
+    data['Max for Upload Supplier Request'][i] = ""
 
 data["Max for Upload Supplier Request"] = list1
 
