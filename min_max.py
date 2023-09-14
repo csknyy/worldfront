@@ -1,8 +1,6 @@
 import pandas as pd
 import streamlit as st
 
-pip install -r requirements.txt
-
 st.set_page_config(page_title="Min Max", layout="wide")
 
 def convert_data(data):
