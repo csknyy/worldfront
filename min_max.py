@@ -8,7 +8,7 @@ def convert_data(data):
 
 uploaded_file = st.file_uploader("Choose the .csv file")
 
-data = pd.read_csv(uploaded_file, header=1)
+data = pd.read_excel(uploaded_file, header=1)
 
 list1 = []
 
