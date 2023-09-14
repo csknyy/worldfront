@@ -55,7 +55,7 @@ list1 = []
 for i in range(len(df)):
   list1.append(max(df["Current Min"][i],df["Min for Upload Supplier Request1"][i]))
 
-dataframe["Min for Upload Supplier Request"] = list1
+df["Min for Upload Supplier Request"] = list1
 
 list1 = []
 for i in range(len(df)):
