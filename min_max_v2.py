@@ -10,6 +10,8 @@ uploaded_file = st.file_uploader("Choose the .csv file")
 
 data = pd.read_excel(uploaded_file, header=1)
 
+data = data.fillna(0)
+
 def rounding_check(number):
   return number // 1 == number
 
