@@ -70,9 +70,7 @@ for i in range(len(data)):
   elif data['Current Min'][i] == data['Min for Upload Supplier Request'][i] and data['Current Max'][i] == data['Max for Upload Supplier Request'][i]:
     data['Min for Upload Supplier Request'][i] = ""
     data['Max for Upload Supplier Request'][i] = ""
-
-data["Max for Upload Supplier Request"] = list1
-
+      
 st.dataframe(data)
 
 csv = convert_data(data)
