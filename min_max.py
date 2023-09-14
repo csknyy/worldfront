@@ -8,7 +8,7 @@ def convert_df(df):
 
 uploaded_file = st.file_uploader("Choose the Excel file")
 
-dataframe = pd.read_excel(uploaded_file)
+dataframe = pd.read_excel(uploaded_file, header=1)
 
 list1 = []
 
