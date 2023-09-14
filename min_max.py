@@ -67,4 +67,4 @@ st.dataframe(data)
 
 csv = convert_data(data)
 
-st.download_button(label="Download data as CSV", data=csv,file_name='Min_Max_with_suggestions.csv', mime='text/csv',index=False)
+st.download_button(label="Download data as CSV", data=csv,file_name='Min_Max_with_supplier_request.csv', mime='text/csv',index=False)
