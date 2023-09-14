@@ -6,9 +6,9 @@ st.set_page_config(page_title="Min Max", layout="wide")
 def convert_df(df):
     return df.to_csv().encode('utf-8')
 
-uploaded_file = st.file_uploader("Choose the Excel file")
+uploaded_file = st.file_uploader("Choose the .csv file")
 
-dataframe = pd.read_excel(uploaded_file, header=1)
+dataframe = pd.read_csv(uploaded_file, header=1)
 
 list1 = []
 
