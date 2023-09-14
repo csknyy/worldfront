@@ -63,8 +63,8 @@ for i in range(len(dataframe)):
 
 dataframe["Max for Upload Supplier Request"] = list1
 
-st.dataframe(result)
+st.dataframe(dataframe)
 
-csv = convert_df(result)
+csv = convert_df(dataframe)
 
 st.download_button(label="Download data as CSV", data=csv,file_name='Concatenated_files.csv', mime='text/csv')
