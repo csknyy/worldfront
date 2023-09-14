@@ -61,7 +61,11 @@ data["Max for Upload Supplier Request"] = list1
 data["Max for Upload Supplier Request1"] = list1
 
 for i in range(len(data)):
-  if data['Current Min'][i] == data['Min for Upload Supplier Request'][i] and data['Current Max'][i] == data['Max for Upload Supplier Request'][i]:
+  if  data['Current Min'][i] == "":
+    data['Min for Upload Supplier Request'][i] = ""
+    data['Max for Upload Supplier Request'][i] = ""
+
+  elif data['Current Min'][i] == data['Min for Upload Supplier Request'][i] and data['Current Max'][i] == data['Max for Upload Supplier Request'][i]:
     data['Min for Upload Supplier Request'][i] = ""
     data['Max for Upload Supplier Request'][i] = ""
 
