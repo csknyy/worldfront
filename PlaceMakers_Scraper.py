@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="PlaceMakers_Scraper", layout="wide")
+st.set_page_config(page_title="Price Scraper", layout="wide")
 
 def clean_string(text):
     remove = ['"', "'", ':']
