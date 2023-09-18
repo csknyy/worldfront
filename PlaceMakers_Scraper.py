@@ -82,6 +82,8 @@ def on_button_click():
     
     url = "https://www.supercheapauto.co.nz/search?prefn1=srgBrand&prefv1=CRC%7CADOS&sz=60"
     response = requests.get(url)
+
+    products = response.text.split(';" title="')
     
     name_list = []
     id_list = []
