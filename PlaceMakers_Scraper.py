@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import requests
+import re
 
 st.set_page_config(page_title="Price Scraper", layout="wide")
 
@@ -143,9 +144,12 @@ def on_button_click():
       try:
         crc_code_list.append(response.text.split('},"mpn":"')[1].split('"')[0])
       except:
-        crc_code_list.append("")
+        try:
+          crc_code_list.append(re.search(r'\b\d{4}\b', name_list[-1]).group(0))
+        except:
+          crc_code_list.append("")
       price_list.append(response.text.split('","price":"')[1].split('"')[0])
-      st.write(f"{items_done} / {len(link_list)} done")
+      print(f"{items_done} / {len(link_list)} done")
       items_done += 1
     
     data = pd.DataFrame()
