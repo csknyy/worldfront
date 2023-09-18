@@ -75,8 +75,7 @@ def on_button_click_Place():
     data['Link'] = link_list
     
     st.dataframe(data)
-
-
+    return data
 
 ##########
 #Super Cheap Auto
@@ -161,7 +160,7 @@ def on_button_click_Warehouse():
 
 if st.button("Scrape PlaceMakers"):
     on_button_click_Place()
-
+    
 if st.button("Scrape Super Cheap Auto"):
     on_button_click_Super()
 
