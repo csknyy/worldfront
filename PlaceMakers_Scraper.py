@@ -113,6 +113,69 @@ def on_button_click_Super():
     
     data = pd.DataFrame()
     data['Name'] = name_list
+    
+    CRC_name_code_dict = {
+        'CRC Aeroclean Degreaser - 400g' : '5070',
+        'CRC White Lithium Grease - 300g' : '5037',
+        'CRC CO Contact Cleaner - 500mL' : '2016',
+        'CRC Black It Enamel Paint, Gloss Black - 400g' : '5111',
+        'CRC Surface Sanitiser Spray - 500mL' : '1752080',
+        'CRC 5.56 Permastraw Multi-Purpose Lubricant 380mL' : '5029',
+        'Multi-Lube Gel' : '5018',
+        '808 Silicone Spray - 500mL' : '3055',
+        'CRC Soft Seal Spray Protectant 400g' : '3013',
+        'CRC Brakleen Blaster - 600g' : '5087',
+        '5.56 Multi-Purpose Lubricant 420mL' : '1751837',
+        'CRC Auto AC Pro Air Conditioner Cleaner' : '1753204',
+        'CRC Black Zinc - 300g' : '2089',
+        'CRC Engine Start 400mL' : '5040',
+        'CRC Maniseal Exhaust Cement - Brown, 145g' : '5061',
+        'Fuel Stabiliser 350mL' : '2815',
+        'CRC Brakleen Brake and Parts Cleaner 600g' : '5089',
+        'ADOS Contact Adhesive - F2 Multipurpose, 75ml' : '8002',
+        'CRC Rust Converter 1 Litre' : '18418',
+        'CRC Zinc It - 350g' : '2085',
+        'CRC Rust Converter Aerosol 425g' : '14610',
+        'CRC Tackle Guard Reel Lube 130ml' : '6028',
+        'CRC De-Icer Aerosol - 400mL' : '5044',
+        'CRC Rust Converter 250mL' : '3073',
+        'Penetr8 - 210ml' : '5500',
+        'CRC Noxy Spray Lubricant 400g' : '3027',
+        'CRC Black It Enamel Paint, Matt Black - 400g' : '5110',
+        'CRC Dust Buster - 250mL' : '2071',
+        'ADOS Spray Adhesive - Multipurpose, 210ml' : '8015',
+        'CRC Bright Zinc - 400mL' : '2087',
+        'Evapo-Rust Spray Gel 500g' : '1753336',
+        'CRC Salt Terminator Mixer - 946mL' : 'SX32M',
+        'CRC Fiberlock Head Gasket Repair - 946mL' : '1224',
+        'CRC Mass Air Flow Sensor Cleaner 400mL' : '5093',
+        'ADOS Spray Adhesive - Multipurpose, 575ml' : '8017',
+        'ADOS Contact Adhesive - F2 Multipurpose, 500ml' : '8009',
+        'CRC Welding Anti-Spatter Spray - 300g' : '3358',
+        'ADOS Contact Adhesive - F2 Multipurpose, 250ml' : '8008',
+        'CRC Oil Fighter - 400mL' : '5069',
+        'CRC GDI Intake Valve Cleaner - 400mL' : '5095',
+        'Marine 556 Lubricant 420mL' : '1751839',
+        'CRC Throttle Body Cleaner 500mL' : '5077',
+        'ADOS Adhesive Remover Stuff Off - 500ml' : '8270',
+        'CRC Belt Grip 400ml' : '3081',
+        'ADOS Spray Adhesive - High Strength, 550ml' : '8180',
+        'CRC Black It Enamel Paint, Satin Black - 400g' : '5112',
+        'CRC Leak Stop Spray Seal 350g' : '8498',
+        'CRC 5.56 Multi Purpose Lubricant - 4 Litre' : '1751846',
+        'CRC Dry Glide - 150mL' : '3040',
+        'Lanocote Multi-Purpose Lubricant - 500mL' : '3020',
+        'CRC Clean-R-Carb - 400g' : '5081',
+        'CRC Battery Maintenance Cleaner 300g' : '5097'        
+    }
+    
+    crc_code_list = []
+    
+    for i in data['Name']:
+      crc_code_list.append(CRC_name_code_dict[i])
+    
+    data['CRC Code'] = crc_code_list
+    
     data['Super Cheap Auto SKU'] = id_list
     data['Price'] = price_list
     data['Link'] = link_list
