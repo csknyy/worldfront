@@ -90,10 +90,7 @@ def on_button_click_Super():
 
     products = response.text.split(';" title="')
     
-    name_list = []
-    id_list = []
-    price_list = []
-    link_list = []
+    name_list, id_list, price_list, link_list = [],[],[],[]
     
     for i in range(1, len(products)):
         try:
