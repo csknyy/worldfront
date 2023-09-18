@@ -5,7 +5,7 @@ import requests
 st.set_page_config(page_title="Price Scraper", layout="wide")
 
 ##########
-# PlaceMakers
+#PlaceMakers
 ##########
 
 def clean_string(text):
@@ -14,8 +14,8 @@ def clean_string(text):
         text = text.replace(i, "")
     return text
 
-def scrape_placemakers():
-    st.write("Scrapping PlaceMakers started")
+def on_button_click():
+    st.write("Scrapping started")
     
     url = "https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page=0"
     response = requests.get(url)
@@ -23,10 +23,10 @@ def scrape_placemakers():
     searchResults = int(clean_string(response.text.split("searchResults")[1].split(",")[0]))
     page_count = searchResults / 20
     
-    if page_count // 1 == page_count:
+    if page_count//1 == page_count:
         page_count = page_count
     else:
-        page_count = page_count // 1 + 1
+        page_count = page_count//1 + 1
     
     responses = []
     for i in range(0, int(page_count)):
@@ -74,11 +74,11 @@ def scrape_placemakers():
     st.dataframe(data)
 
 ##########
-# Super Cheap Auto
+#Super Cheap Auto
 ##########
 
-def scrape_supercheapauto():
-    st.write("Scrapping Super Cheap Auto started")
+def on_button_click():
+    st.write("Scrapping started")
     
     url = "https://www.supercheapauto.co.nz/search?prefn1=srgBrand&prefv1=CRC%7CADOS&sz=60"
     response = requests.get(url)
@@ -107,11 +107,11 @@ def scrape_supercheapauto():
     data['SKU'] = id_list
     data['Price'] = price_list
     data['Link'] = link_list
-    
+
     st.dataframe(data)
 
 if st.button("Scrape PlaceMakers"):
-    scrape_placemakers()
+    on_button_click()
 
 if st.button("Scrape Super Cheap Auto"):
-    scrape_supercheapauto()
+    on_button_click()
