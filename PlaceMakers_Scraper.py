@@ -11,7 +11,7 @@ def clean_string(text):
     return text
 
 def on_button_click():
-    st.write("Scrape PlaceMakers")
+    #st.write("Scrape PlaceMakers")
     
     url = "https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page=0"
     response = requests.get(url)
