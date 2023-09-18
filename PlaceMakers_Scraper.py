@@ -69,8 +69,6 @@ def on_button_click():
     data['SKU'] = id_list
     data['Price'] = price_list
     
-    data
-    
     st.dataframe(data)
 
 if st.button("Scrape PlaceMakers"):
