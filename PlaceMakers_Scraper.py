@@ -95,6 +95,9 @@ def on_button_click():
     id_list = []
     price_list = []
     link_list = []
+    
+    items_done = 1
+    
     for i in range(1, len(products)):
         try:
             if "<" in products[i].split('">')[0]:
@@ -109,6 +112,9 @@ def on_button_click():
             link_list.append("https://www.supercheapauto.co.nz" + products[i].split('href="')[1].split('"')[0])
         except:
             pass
+        #st.write(f"{items_done} / {len(products)} done")
+        print(f"{items_done} / {len(products)} done")
+        items_done += 1
     
     data = pd.DataFrame()
     data['Name'] = name_list
