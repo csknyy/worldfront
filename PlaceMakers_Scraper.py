@@ -67,7 +67,7 @@ def on_button_click():
     data = pd.DataFrame()
     data['Name'] = name_list
     data['CRC Code'] = crc_code_list
-    data['SKU'] = id_list
+    data['PlaceMakers SKU'] = id_list
     data['Price'] = price_list
     data['Link'] = link_list
     
@@ -106,7 +106,7 @@ def on_button_click():
     
     data = pd.DataFrame()
     data['Name'] = name_list
-    data['SKU'] = id_list
+    data['Super Cheap Auto SKU'] = id_list
     data['Price'] = price_list
     data['Link'] = link_list
 
