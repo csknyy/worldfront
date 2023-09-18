@@ -11,7 +11,7 @@ def clean_string(text):
     return text
 
 def on_button_click():
-    st.write("Scrape PlaceMakers")
+    st.write("Scrapping started")
     
     url = "https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page=0"
     response = requests.get(url)
@@ -29,13 +29,17 @@ def on_button_click():
         url = f"https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page={i}"
         response = requests.get(url)
         responses.append(response.text)
+
+    st.write("Pages opened. Now collecting products.")
     
     products = []
     for i in range(len(responses)):
         response = responses[i]
         for i in range(len(response.split('<a class="name otherwise" href="/online/p/'))):
             products.append(response.split('<a class="name otherwise" href="/online/p/')[i])
-        
+
+    st.write("Products collected. Now cleaning.")
+    
     name_list = []
     crc_code_list = []
     id_list = []
