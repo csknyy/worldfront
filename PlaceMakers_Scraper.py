@@ -25,17 +25,21 @@ def on_button_click():
         page_count = page_count//1 + 1
     
     responses = []
-    
     for i in range(0, int(page_count)):
         url = f"https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page={i}"
         response = requests.get(url)
         responses.append(response.text)
+
+    products = []
+    for i in range(len(responses)):
+      response = responses[i]
+      for i in range(len(response.split('<a class="name otherwise" href="/online/p/'))):
+        products.append(response.split('<a class="name otherwise" href="/online/p/')[i])
     
     name_list = []
     crc_code_list = []
     id_list = []
     price_list = []
-    
     for response in responses:
         products = response.split('<div class="product-block')
         for i in range(1, len(products)):
