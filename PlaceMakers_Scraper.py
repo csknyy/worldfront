@@ -11,7 +11,7 @@ def clean_string(text):
     return text
 
 def on_button_click():
-    #st.write("Scrape PlaceMakers")
+    st.write("Scrape PlaceMakers")
     
     url = "https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page=0"
     response = requests.get(url)
@@ -29,42 +29,43 @@ def on_button_click():
         url = f"https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page={i}"
         response = requests.get(url)
         responses.append(response.text)
-
+    
     products = []
     for i in range(len(responses)):
-      response = responses[i]
-      for i in range(len(response.split('<a class="name otherwise" href="/online/p/'))):
-        products.append(response.split('<a class="name otherwise" href="/online/p/')[i])
-    
+        response = responses[i]
+        for i in range(len(response.split('<a class="name otherwise" href="/online/p/'))):
+            products.append(response.split('<a class="name otherwise" href="/online/p/')[i])
+        
     name_list = []
     crc_code_list = []
     id_list = []
     price_list = []
-    for response in responses:
-        products = response.split('<div class="product-block')
-        for i in range(1, len(products)):
-            try:
-                if "<" in products[i].split('"')[0]:
-                    pass
-                else:
-                    id_list.append(products[i].split('"')[0])
-                if "<" in products[i].split('\n\t\t\t\t\t\t\t')[1].split('</a>')[0]:
-                    pass
-                else:
-                    name_list.append(products[i].split('\n\t\t\t\t\t\t\t')[1].split('</a>')[0])
-                if "<" in products[i].split('Part Code: ')[1].split('<')[0]:
-                    pass
-                else:
-                    crc_code_list.append(products[i].split('Part Code: ')[1].split('<')[0])
-                price_list.append(products[i].split('$')[1].split('<')[0])
-            except:
-                pass
     
+    for i in range(1, len(products)):
+        try:
+            if "<" in products[i].split('"')[0]:
+                pass
+            else:
+                id_list.append(products[i].split('"')[0])
+            if "<" in products[i].split('\n\t\t\t\t\t\t\t')[1].split('</a>')[0]:
+                pass
+            else:
+                name_list.append(products[i].split('\n\t\t\t\t\t\t\t')[1].split('</a>')[0])
+            if "<" in products[i].split('Part Code: ')[1].split('<')[0]:
+                pass
+            else:
+                crc_code_list.append(products[i].split('Part Code: ')[1].split('<')[0])
+            price_list.append(products[i].split('$')[1].split('<')[0])
+        except:
+            pass
+        
     data = pd.DataFrame()
     data['Name'] = name_list
     data['CRC Code'] = crc_code_list
     data['SKU'] = id_list
     data['Price'] = price_list
+    
+    data
     
     st.dataframe(data)
 
