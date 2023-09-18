@@ -5,9 +5,6 @@ import re
 
 st.set_page_config(page_title="Price Scraper", layout="wide")
 
-##########
-#PlaceMakers
-##########
 
 def clean_string(text):
     remove = ['"', "'", ':']
@@ -15,7 +12,15 @@ def clean_string(text):
         text = text.replace(i, "")
     return text
 
-def on_button_click():
+
+##########
+#PlaceMakers
+##########
+
+if st.button("Scrape PlaceMakers"):
+    on_button_click()
+
+    def on_button_click():
     st.write("Scrapping started")
     
     url = "https://www.placemakers.co.nz/online/search?q=%3ASort+By%3Abrand%3ACRC&page=0"
@@ -74,11 +79,16 @@ def on_button_click():
     
     st.dataframe(data)
 
+
+
 ##########
 #Super Cheap Auto
 ##########
 
-def on_button_click():
+if st.button("Scrape Super Cheap Auto"):
+    on_button_click()
+
+    def on_button_click():
     st.write("Scrapping started")
     
     url = "https://www.supercheapauto.co.nz/search?prefn1=srgBrand&prefv1=CRC%7CADOS&sz=60"
@@ -114,21 +124,12 @@ def on_button_click():
 
     st.dataframe(data)
 
-
-
-###################################################################
-
-if st.button("Scrape PlaceMakers"):
-    on_button_click()
-
-if st.button("Scrape Super Cheap Auto"):
-    on_button_click()
+##########
+#The Warehouse
+##########
 
 if st.button("Scrape The Warehouse"):
     on_button_click()
-    ##########
-    #The Warehouse
-    ##########
     
     def on_button_click():
         st.write("Scrapping started")
