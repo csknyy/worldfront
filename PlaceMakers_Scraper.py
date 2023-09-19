@@ -180,7 +180,7 @@ def on_button_click_Super():
     data['Price'] = price_list
     data['Link'] = link_list
 
-    st.dataframe(data)
+    #st.dataframe(data)
 
     data1 = pd.DataFrame()
 
