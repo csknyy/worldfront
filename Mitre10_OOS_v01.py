@@ -13,8 +13,10 @@ if uploaded_file_0 is not None and uploaded_file_1 is not None:
     try:
         data_BSS = pd.read_excel(uploaded_file_0, sheet_name = 'Products below safety stock')
 
-        data_M10_ranking = pd.read_excel(uploaded_file_1, engine = 'openpyxl', skiprows = 5, usecols = list(range(4, 115)), sheet_name = 'Ranking')        
-        data_M10_stock = pd.read_excel(uploaded_file_1, engine = 'openpyxl', skiprows = 2, usecols = list(range(2, 12)), sheet_name = 'Stock')
+        data_M10_ranking = pd.read_excel(uploaded_file_1, engine = 'openpyxl', sheet_name = 'Ranking',header = 5)
+        data_M10_ranking = data_M10_ranking.iloc[:,4:]
+        data_M10_stock = pd.read_excel(uploaded_file_1, engine = 'openpyxl', sheet_name = 'Stock',header = 2)
+        data_M10_stock = data_M10_stock.iloc[:,2:]
         
         #####################################
         
