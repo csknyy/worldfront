@@ -1,54 +1,49 @@
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(page_title="Min Max v2.0", layout="wide")
 
 def convert_data(data):
     return data.to_csv(index=False).encode('utf-8')
 
-uploaded_file_0 = st.file_uploader("Choose the .csv file")
-uploaded_file_1 = st.file_uploader("Choose the .csv file")
+uploaded_file_0 = st.file_uploader("Choose the 'Products below safety stock' .csv file", key="file_uploader_0")
+uploaded_file_1 = st.file_uploader("Choose the 'Ranking' and 'Stock' .xlsx file", key="file_uploader_1")
 
-#####
-data_BSS = pd.read_excel(uploaded_file_0, sheet_name = 'Products below safety stock')
+if uploaded_file_0 is not None and uploaded_file_1 is not None:
+    try:
+        data_BSS = pd.read_excel(uploaded_file_0, sheet_name='Products below safety stock')
+        data_M10_ranking = pd.read_excel(uploaded_file_1, engine='openpyxl', skiprows=5, usecols=list(range(4, 115)), sheet_name='Ranking')
+        data_M10_stock = pd.read_excel(uploaded_file_1, engine='openpyxl', skiprows=2, usecols=list(range(2, 12)), sheet_name='Stock')
 
-data_M10_ranking = pd.read_excel(uploaded_file_1, engine = 'openpyxl', skiprows = 5, usecols = list(range(4, 115)), sheet_name = 'Ranking')
-data_M10_stock = pd.read_excel(uploaded_file_1, engine = 'openpyxl', skiprows = 2, usecols = list(range(2, 12)), sheet_name = 'Stock')
+        data = pd.merge(data_BSS['Legacy'], data_M10_ranking[['Supplier Item Code', 'M10 Code','Item', 'Department', 'Range']], how='left', left_on='Legacy', right_on='Supplier Item Code')
 
+        data['SOH Status'] = ''
+        del data['Supplier Item Code']
+        data['Next Availabilty Date (NAVD)'] = data_BSS['ETA to Mondiale']
+        data['Date item went Out of Stock'] = ''
+        data['Days Out Of Stock'] = ''
+        data['Mitre 10 Promo'] = ''
+        data['Supplier Comments'] = ''
 
-data = pd.merge(data_BSS['Legacy'], data_M10_ranking[['Supplier Item Code', 'M10 Code','Item', 'Department', 'Range']], how='left', left_on='Legacy', right_on='Supplier Item Code')
+        data = pd.merge(data, data_M10_ranking[['Supplier Item Code','$Value MAT','Units MAT','SOH LW']], how='left', left_on='Legacy', right_on='Supplier Item Code')
+        del data['Supplier Item Code']
 
-data['SOH Status'] = ''
+        data = pd.merge(data, data_M10_stock[['Supplier Item Code','WOC ']], how='left', left_on='Legacy', right_on='Supplier Item Code')
+        del data['Supplier Item Code']
 
-del data['Supplier Item Code']
+        data[' '] = ''
+        data['Physical inventory'] = data_BSS['Physical inventory']
 
-data['Next Availabilty Date (NAVD)'] = data_BSS['ETA to Mondiale']
+        for i in ['M10 Code', '$Value MAT', 'Units MAT', 'SOH LW', 'WOC ']:
+            data[i] = data[i].fillna(0).astype(int)
 
-data['Date item went Out of Stock'] = ''
-data['Days Out Of Stock'] = ''
-data['Mitre 10 Promo'] = ''
-data['Supplier Comments'] = ''
+        data = data[(data['Physical inventory']==0) & (data['M10 Code'] != 0)]
+        del data['Physical inventory']
 
-data = pd.merge(data, data_M10_ranking[['Supplier Item Code','$Value MAT','Units MAT','SOH LW']], how='left', left_on='Legacy', right_on='Supplier Item Code')
+        st.dataframe(data)  # Display the processed data
 
-del data['Supplier Item Code']
+        csv = convert_data(data)
+        st.download_button(label="Download data as CSV", data=csv, file_name='Min_Max_with_supplier_request.csv', mime='text/csv')
 
-data = pd.merge(data, data_M10_stock[['Supplier Item Code','WOC ']], how='left', left_on='Legacy', right_on='Supplier Item Code')
-
-del data['Supplier Item Code']
-
-data[' '] = ''
-
-data['Physical inventory'] = data_BSS['Physical inventory']
-
-for i in ['M10 Code', '$Value MAT', 'Units MAT', 'SOH LW', 'WOC ']:
-  data[i] = data[i].fillna(0).astype(int)
-
-data = data[(data['Physical inventory']==0) & (data['M10 Code'] != 0)]
-
-del data['Physical inventory']
-
-st.dataframe(data)
-
-csv = convert_data(data)
-
-st.download_button(label="Download data as CSV", data=csv,file_name='Min_Max_with_supplier_request.csv', mime='text/csv')
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
