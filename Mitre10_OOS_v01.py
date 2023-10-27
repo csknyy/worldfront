@@ -11,12 +11,12 @@ uploaded_file_1 = st.file_uploader("Upload the 'M10 Bronze CRC Ranking Report' .
 
 if uploaded_file_0 is not None and uploaded_file_1 is not None:
     try:
-        data_BSS = pd.read_excel('NZ BSS Report - 26.10.23.xlsx', sheet_name = 'Products below safety stock')
+        data_BSS = pd.read_excel(uploaded_file_0, sheet_name = 'Products below safety stock')
 
-        data_M10_ranking = pd.read_excel('M10 Bronze CRC Ranking Report - CRC All Departments - wc 2023-10-16.xlsm', engine = 'openpyxl', sheet_name = 'Ranking',header = 5)
+        data_M10_ranking = pd.read_excel(uploaded_file_1, engine = 'openpyxl', sheet_name = 'Ranking',header = 5)
         data_M10_ranking = data_M10_ranking.iloc[:,4:]
         
-        data_M10_stock = pd.read_excel('M10 Bronze CRC Ranking Report - CRC All Departments - wc 2023-10-16.xlsm', engine = 'openpyxl', sheet_name = 'Stock',header = 2)
+        data_M10_stock = pd.read_excel(uploaded_file_1, engine = 'openpyxl', sheet_name = 'Stock',header = 2)
         data_M10_stock = data_M10_stock.iloc[:,2:]
         
         #####################################
