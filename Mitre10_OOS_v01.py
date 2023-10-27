@@ -5,8 +5,8 @@ st.set_page_config(page_title="Min Max v2.0", layout="wide")
 def convert_data(data):
     return data.to_csv(index=False).encode('utf-8')
 
-uploaded_file_0 = st.file_uploader("Choose the .csv file", key = key_1)
-uploaded_file_1 = st.file_uploader("Choose the .csv file", key = key_2)
+uploaded_file_0 = st.file_uploader("Choose the .csv file")
+uploaded_file_1 = st.file_uploader("Choose the .csv file")
 
 #####
 data_BSS = pd.read_excel(uploaded_file_0, sheet_name = 'Products below safety stock')
