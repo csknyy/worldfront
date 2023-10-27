@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Min Max v2.0", layout="wide")
+st.set_page_config(page_title="Mitre 10 OOS report", layout="wide")
 
 def convert_data(data):
     return data.to_csv(index=False).encode('utf-8')
