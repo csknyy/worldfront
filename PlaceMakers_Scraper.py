@@ -248,7 +248,7 @@ def on_button_click_Warehouse():
 #The ToolShed
 ##########
 
-def on_button_click_Place():
+def on_button_click_ToolShed():
     st.write("Scrapping started")
     
     #manually scraped the SKUs#
@@ -295,4 +295,4 @@ if st.button("Scrape The Warehouse"):
     on_button_click_Warehouse()
 
 if st.button("Scrape The ToolShed"):
-    on_button_click_Warehouse()
+    on_button_click_ToolShed()
