@@ -244,6 +244,47 @@ def on_button_click_Warehouse():
     merged_data = data1.merge(data, on='CRC Code', how='left').fillna("")
     st.dataframe(merged_data)
 
+##########
+#The ToolShed
+##########
+
+def on_button_click_Place():
+    st.write("Scrapping started")
+    
+    #manually scraped the SKUs#
+    sku_list = ['12658','14002','14003','14005','38166','12647','12645','12646','12649','12651','12903','17068','12648','14779','12655','12657','12660','15959','16638','20099','12650','12652','12653','12656','12659','14524','15958','16561','16631','17308','35011','12658']
+    
+    code_list = []
+    name_list = []
+    price_list = []
+    link_list = []
+    
+    for i in sku_list:
+      url = f"https://www.thetoolshed.co.nz/product/{i}"
+      response = requests.get(url)
+    
+      code_list.append(response.text.split('Code:</div>\n            <div class="value">')[1].split('</div>')[0])
+      name_list.append(response.text.split('<title>')[1].split('</title>')[0])
+      price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
+      link_list.append(url)
+    
+    data = pd.DataFrame()
+    data['CRC Code'] = code_list
+    data['Name'] = name_list
+    data['ToolShed SKU'] = sku_list
+    data['Price'] = price_list
+    data['Link'] = link_list
+    
+    st.dataframe(data)
+    
+    data1 = pd.DataFrame()
+    
+    data1['CRC Code'] = ['3020','3027','3036','3040','3055','3058','3059','3061','3063','3064','3097','3145','3358','3410','5006','5009','5012','5014','5015','5018','5019','5028','5029','5035','5037','5070','5089','5500','1751837','1751839','1751840','1751841','1751842','1751846','1751847','1751848','1752426','1752455','5022','5023','5025','5026','5044','5045','5047','5069','9009','9011','9015','9017','9060','9220','9225','9230','9235','9240','9302','9304','9308','8288','20365','20369','20380','20384','20388','20392','20395','20400','2105','2087','2090','2125','2129','3073','3075','14610','18418','1753336','EVR1','EVR5','4420','4490','4492','5115','7063','7064','7072','7073','7074','7075','8002','8006','8008','8009','8010','8012','8014','8017','8020','8022','8026','8034','8110','8180','8200','8202','8204','8270','8490','8492','8494','8498','1751844','1753108','5040','6028','2015','2016','2018','2053','2071','3013']
+    merged_data = data1.merge(data, on='CRC Code', how='left').fillna("")
+    
+    st.dataframe(merged_data)
+
+
 if st.button("Scrape PlaceMakers"):
     on_button_click_Place()
     
@@ -251,4 +292,7 @@ if st.button("Scrape Super Cheap Auto"):
     on_button_click_Super()
 
 if st.button("Scrape The Warehouse"):
+    on_button_click_Warehouse()
+
+if st.button("Scrape The ToolShed"):
     on_button_click_Warehouse()
