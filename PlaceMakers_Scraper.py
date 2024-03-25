@@ -344,17 +344,19 @@ def on_button_click_TotalTools():
     st.dataframe(data)   
 
 
-if st.button("Scrape PlaceMakers"):
+if st.button("NZ - Scrape PlaceMakers"):
     on_button_click_Place()
     
-if st.button("Scrape Super Cheap Auto"):
+if st.button("NZ - Scrape Super Cheap Auto"):
     on_button_click_Super()
 
-if st.button("Scrape The Warehouse"):
+if st.button("NZ - Scrape The Warehouse"):
     on_button_click_Warehouse()
 
-if st.button("Scrape The ToolShed"):
+if st.button("NZ - Scrape The ToolShed"):
     on_button_click_ToolShed()
 
-if st.button("Scrape The AU - Total Tools"):
+st.markdown('---')
+
+if st.button("AU - Scrape The Total Tools"):
     on_button_click_TotalTools()
