@@ -253,8 +253,8 @@ def on_button_click_ToolShed():
     st.write("Scrapping started")
     
     #manually scraped the SKUs#
-    sku_list = ['12658','14002','14003','14005','38166','12647','12645','12646','12649','12651','12903','17068','12648','14779','12655','12657','12660','15959','16638','20099','12650','12652','12653','12656','12659','14524','15958','16561','16631','17308','35011','12658']
-    
+    sku_list = ['17068', '14524', '15958', '12650', '17308', '40683', '16382', '40719', '12651', '12652', '12649', '12659', '16638', '12903', '40721', '40715', '12655', '40717', '40761', '15959', '40718', '12660', '12646', '40684', '15463', '16631', '12657', '12653', '14005', '14003', '14779', '38166', '12648', '16561', '35011', '12656', '40720', '12658', '14002', '20099', '12645', '40716', '40685', '12647', '40807', '40682']
+
     code_list = []
     name_list = []
     price_list = []
@@ -264,7 +264,7 @@ def on_button_click_ToolShed():
       url = f"https://www.thetoolshed.co.nz/product/{i}"
       response = requests.get(url)
     
-      code_list.append(response.text.split('Code:</div>\n            <div class="value">')[1].split('</div>')[0])
+      code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
       name_list.append(response.text.split('<title>')[1].split('</title>')[0])
       price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
       link_list.append(url)
