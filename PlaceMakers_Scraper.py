@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import requests
 import re
+import json
 
 st.set_page_config(page_title="Price Scraper", layout="wide")
 
@@ -284,6 +285,64 @@ def on_button_click_ToolShed():
     
     st.dataframe(merged_data)
 
+##########
+#AU - Total Tools
+##########
+
+def on_button_click_TotalTools():
+    st.write("Scrapping started")
+
+    url = "https://www.totaltools.com.au/brands/crc?p=1&product_list_limit=48"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
+    response = requests.get(url, headers=headers)
+    
+    searchResults = int(response.text.split('"toolbar-number">')[3].split('<')[0])
+    page_count = searchResults / 48
+    
+    if page_count//1 == page_count:
+        page_count = page_count
+    else:
+        page_count = page_count//1 + 1
+    
+    response_text = ''
+    responses = []
+    for i in range(1, int(page_count)+1):
+        url = f"https://www.totaltools.com.au/brands/crc?p={i}&product_list_limit=48"
+        response = requests.get(url)
+        responses.append(response.text)
+        response_text = response_text + response.text
+
+    products_text = response_text.split('"list":"CRC","category":"Brands\\/CRC",')
+
+    products = []
+    
+    for i in range(1, len(products_text)):
+      string_data = products_text[i].split(',"position"')[0]
+      string_data = '{' + string_data + '}'
+      products.append(json.loads(string_data))
+    
+    name_list = []
+    crc_code_list = []
+    id_list = []
+    price_list = []
+    for i in range(0, len(products)):
+      for j,k in zip([id_list, name_list, price_list],['id', 'name', 'price']):
+        try:
+          j.append(products[i][k])
+        except:
+          j.append('')
+        
+    id_list = [i.replace('.','') for i in id_list]
+    crc_code_list = [i.split(' ')[-1] for i in name_list]
+    
+    data = pd.DataFrame()
+    data['Name'] = name_list
+    data['CRC Code'] = crc_code_list
+    data['Total Tools SKU'] = id_list
+    data['Price'] = price_list
+
+    st.dataframe(data)   
+
 
 if st.button("Scrape PlaceMakers"):
     on_button_click_Place()
@@ -296,3 +355,6 @@ if st.button("Scrape The Warehouse"):
 
 if st.button("Scrape The ToolShed"):
     on_button_click_ToolShed()
+
+if st.button("Scrape The AU - Total Tools"):
+    on_button_click_TotalTools()
