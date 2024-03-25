@@ -255,39 +255,91 @@ def on_button_click_ToolShed():
     #manually scraped the SKUs#
     sku_list = ['15463', '16382', '17068', '14524', '15958', '12650', '17308', '40683', '40719', '12651', '12652', '12649', '12659', '16638', '12903', '40721', '40715', '12655', '40717', '40761', '15959', '40718', '12660', '12646', '40684', '16631', '12657', '12653', '14005', '14003', '14779', '38166', '12648', '16561', '35011', '12656', '40720', '12658', '14002', '20099', '12645', '40716', '40685', '12647', '40807', '40682']
 
-    code_list = []
+    crc_code_list = []
     name_list = []
     price_list = []
     link_list = []
+    sku_list1 = []
     
     for i in sku_list:
+      print(i)
       url = f"https://www.thetoolshed.co.nz/product/{i}"
       response = requests.get(url)
       brand_temp = response.text.split('<title>')[1].split(' ')[0]
       if brand_temp == 'CRC' or brand_temp == 'ADOS':
-        code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
+        crc_code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
         name_list.append(response.text.split('<title>')[1].split('</title>')[0])
         price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
+        sku_list1.append(i)
         link_list.append(url)
+    
       else:
-        url = f"https://www.thetoolshed.co.nz/product-group/{i}"
-        response = requests.get(url)
-        brand_temp = response.text.split('<title>')[1].split(' ')[0]
-        if brand_temp == 'CRC' or brand_temp == 'ADOS':
-          code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
-          name_list.append(response.text.split('<title>')[1].split('</title>')[0])
-          price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
-          link_list.append(url)
-        else:
-          code_list.append('')
+        name_list2 = []
+        crc_code_list2 = []
+        price_list2 = []
+        sku_list2 = []
+        link_list2 = []
+        try:
+          try:
+            original_i = i
+    
+            url = f"https://www.thetoolshed.co.nz/product-group/{i}"
+            response = requests.get(url)
+    
+            for j in response.text.split('content_ids: [')[1].split("]")[0].replace('"','').split(','):
+              crc_code_list2.append(j)
+    
+          except:
+            i = original_i
+    
+            url = f"https://www.thetoolshed.co.nz/product/{i}"
+            response = requests.get(url)
+    
+          for j in response.text.split('<div class="name">'):
+            if len(j.split('<')[0].strip()) > 0:
+              name_list2.append(j.split('<')[0].strip().replace(' &amp; ',' & '))
+    
+          for j in response.text.split('content_ids: [')[1].split("]")[0].replace('"','').split(','):
+            crc_code_list2.append(j)
+    
+          for j in response.text.split('$'):
+            try:
+              if int(j.split(' ')[0][0]) > 0:
+                price_list2.append(j.split(' ')[0].replace(',',''))
+            except:
+              pass
+    
+          for j in range(len(name_list2)):
+            sku_list2.append(i)
+          for j in range(len(name_list2)):
+            link_list2.append(url)
+    
+          crc_code_list2 = crc_code_list2[:len(name_list2)]
+          price_list2 = price_list2[:len(name_list2)]
+    
+        except:  
+          crc_code_list.append('')
           name_list.append('')
           price_list.append('')
+          sku_list1.append('')
           link_list.append('')
     
+        for j in name_list2:
+          name_list.append(j)
+        for j in crc_code_list2:
+          crc_code_list.append(j)
+        for j in price_list2:
+          price_list.append(j)
+        for j in sku_list2:
+          sku_list1.append(j)
+        for j in link_list2:
+          link_list.append(j)
+    
+    
     data = pd.DataFrame()
-    data['CRC Code'] = code_list
+    data['CRC Code'] = crc_code_list
     data['Name'] = name_list
-    data['ToolShed SKU'] = sku_list
+    data['ToolShed SKU'] = sku_list1
     data['Price'] = price_list
     data['Link'] = link_list
     
