@@ -263,11 +263,26 @@ def on_button_click_ToolShed():
     for i in sku_list:
       url = f"https://www.thetoolshed.co.nz/product/{i}"
       response = requests.get(url)
-    
-      code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
-      name_list.append(response.text.split('<title>')[1].split('</title>')[0])
-      price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
-      link_list.append(url)
+      brand_temp = response.text.split('<title>')[1].split(' ')[0]
+      if brand_temp == 'CRC' or brand_temp == 'ADOS':
+        code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
+        name_list.append(response.text.split('<title>')[1].split('</title>')[0])
+        price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
+        link_list.append(url)
+      else:
+        url = f"https://www.thetoolshed.co.nz/product-group/{i}"
+        response = requests.get(url)
+        brand_temp = response.text.split('<title>')[1].split(' ')[0]
+        if brand_temp == 'CRC' or brand_temp == 'ADOS':
+          code_list.append(response.text.split('<div class="value">')[1].split('<')[0])
+          name_list.append(response.text.split('<title>')[1].split('</title>')[0])
+          price_list.append(float(response.text.split('"price":"')[1].split('"')[0]))
+          link_list.append(url)
+        else:
+          code_list.append('')
+          name_list.append('')
+          price_list.append('')
+          link_list.append('')
     
     data = pd.DataFrame()
     data['CRC Code'] = code_list
