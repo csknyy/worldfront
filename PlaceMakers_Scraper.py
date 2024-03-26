@@ -571,4 +571,59 @@ if st.button("AU - Scrape Super Cheap Auto"):
 
 st.markdown('---')
 text_input = st.text_input("Enter text here:")
-st.write("You entered:", text_input)
+if text_input > 0:
+    list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
+    list1 = [i.replace('CRC ','') for i in list1]
+    list2 = []
+    
+    for i in range(len(list1)):
+      if list1[i][0] == '$':
+        try:
+          list2.append(list1[i].split(' - ')[0][list1[i].index('.')+3:] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
+        except:
+          pass
+      else:
+        list2.append(list1[i].split(' - ')[0] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
+    
+    list2 = [i.strip() for i in list2]
+    
+    for i in range(len(list2)):
+      if 'Features:' in list2[i]:
+        temp = list2[i]
+        list2[i] = temp.split(' Features:')[0] + ' - ' + temp.split(' - ')[-1]
+    
+    list3 = []
+    
+    for text in list2:
+      text = text.replace('CR', '- CR')
+      if "CR" in text:
+        CR_index = text.find('CR')+9
+        temp = text[:CR_index]
+      else:
+        temp = text
+    
+      value_index = text.find('$')
+    
+      while temp[-1].isdigit() == False:
+        temp = temp[:-1]
+    
+      temp = temp.replace(' - - ', ' - ')
+      temp = temp.replace(' - CR', ' - ')
+    
+      if "$" in temp:
+        list3.append(temp)
+      else:
+        list3.append(temp + ' - ' + text[value_index:])
+    
+    data_split = [item.split(" - ") for item in list3]
+    
+    data = pd.DataFrame(data_split, columns=["Item Description", "CRC Code", "Price"])
+    
+    data['Price'] = [float(i.replace('$','')) for i in data['Price']]
+    
+    data['TKD Club Price'] = (data['Price'] * 0.975).round(2)
+    
+    st.dataframe(data)
+
+else:
+    pass
