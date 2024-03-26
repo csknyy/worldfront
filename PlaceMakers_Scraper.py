@@ -414,6 +414,8 @@ def on_button_click_AU_TotalTools():
     data['Total Tools SKU'] = id_list
     data['Price'] = price_list
 
+    data.loc[data['CRC Code'] == 'Fluid', 'CRC Code'] = '3065'
+
     st.dataframe(data)
 
 ##########
