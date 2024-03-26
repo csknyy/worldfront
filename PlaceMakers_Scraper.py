@@ -571,7 +571,7 @@ if st.button("AU - Scrape Super Cheap Auto"):
 
 st.markdown('---')
 text_input = st.text_input("Enter text here:")
-if text_input > 0:
+if len(text_input) > 1:
     list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
     list1 = [i.replace('CRC ','') for i in list1]
     list2 = []
