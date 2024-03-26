@@ -570,4 +570,5 @@ if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
 
 st.markdown('---')
-st.write("You entered: ", text_input)
+text_input = st.text_input("Enter text here:")
+st.write("You entered:", text_input)
