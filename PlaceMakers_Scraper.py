@@ -570,7 +570,7 @@ if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
 
 st.markdown('---')
-text_input = st.text_input("Enter text here:")
+text_input = st.text_input("Enter Tool Kit Depot text here:")
 if len(text_input) > 1:
     list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
     list1 = [i.replace('CRC ','') for i in list1]
