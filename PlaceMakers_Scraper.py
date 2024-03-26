@@ -568,3 +568,6 @@ if st.button("AU - Scrape The Total Tools"):
 
 if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
+
+st.markdown('---')
+st.write("You entered: ", text_input)
