@@ -569,7 +569,6 @@ if st.button("AU - Scrape The Total Tools"):
 if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
 
-st.markdown('---')
 text_input = st.text_input("Enter Tool Kit Depot text here:")
 if len(text_input) > 1:
     list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
@@ -623,6 +622,38 @@ if len(text_input) > 1:
     
     data['TKD Club Price'] = (data['Price'] * 0.975).round(2)
     
+    st.dataframe(data)
+
+text_input = st.text_input("Enter Sydney tools text here:")
+if len(text_input) > 1:
+    test_list = text_input.split("CRC ")[::3][1:]
+
+    new_list,indexes = [],[]
+    
+    for i in range(len(test_list)):
+      temp = test_list[i].strip()
+      check = [ "FREE SHIPPING", "Clearance"]
+      for word in check:
+        if word in temp:
+          indexes.append([i+1,word])
+          temp = test_list[i].replace(word,"")
+      new_list.append(temp.strip())
+    
+    crc_codes = [i.split(" ")[0] for i in new_list]
+    prices = [i.split(" ")[-1] for i in new_list]
+    names = [' '.join(i.split(" ")[1:-1]) for i in new_list]
+    
+    data = pd.DataFrame()
+    
+    data['CRC Code'] = crc_codes
+    data['Item Description'] = names
+    data['Price'] = prices
+    
+    data['Flag'] = ''
+    
+    for ind in indexes: 
+      data['Flag'][ind[0]] = ind[1]
+
     st.dataframe(data)
 
 else:
