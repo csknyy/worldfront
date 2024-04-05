@@ -655,6 +655,38 @@ if len(text_input) > 1:
       data['Flag'][ind[0]] = ind[1]
 
     st.dataframe(data)
+    
+else:
+    pass
+
+text_input = st.text_input("Enter Atom Supply text here:")
+if len(text_input) > 1:
+    text_input = text_input.replace('More information','Add to Cart').replace('Missing Price','$')
+
+    products = [i.strip() for i in text_input.split(' Add to Cart Add to Compare')][:-1]
+    
+    names = []
+    for i in products:
+      if len(i.split('CRC')[0])>0:
+        names.append(i.split('CRC')[0].strip())
+      else:
+        try:
+          names.append(i.split('CRC')[1].strip())
+        except:
+          pass
+    
+    ATOM_SKU = [i.split('ATOM Code: ')[1].split(' ')[0] for i in products]
+    first_price = [i.split('$')[1].split(' ')[0] for i in products]
+    actual_price = [i.split('$')[2].split(' ')[0] for i in products]
+    
+    data = pd.DataFrame()
+    
+    data['ATOM_SKU'] = ATOM_SKU
+    data['Item Description'] = names
+    data['First Price'] = first_price
+    data['Actual Price'] = actual_price
+
+    st.dataframe(data)
 
 else:
     pass
