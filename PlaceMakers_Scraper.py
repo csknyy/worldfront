@@ -569,6 +569,10 @@ if st.button("AU - Scrape The Total Tools"):
 if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
 
+
+######################################################
+######## Tool Kit Depot
+
 text_input = st.text_input("Enter Tool Kit Depot text here:")
 if len(text_input) > 1:
     list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
@@ -624,6 +628,9 @@ if len(text_input) > 1:
     
     st.dataframe(data)
 
+######################################################
+######## Sydney Tools
+
 text_input = st.text_input("Enter Sydney tools text here:")
 if len(text_input) > 1:
     test_list = text_input.split("CRC ")[::3][1:]
@@ -659,6 +666,9 @@ if len(text_input) > 1:
 else:
     pass
 
+######################################################
+######## Atom Supply
+
 text_input = st.text_input("Enter Atom Supply text here:")
 if len(text_input) > 1:
     text_input = text_input.replace('More information','Add to Cart').replace('Missing Price','$')
@@ -685,6 +695,33 @@ if len(text_input) > 1:
     data['Item Description'] = names
     data['First Price'] = first_price
     data['Actual Price'] = actual_price
+
+    st.dataframe(data)
+
+else:
+    pass
+
+######################################################
+######## Mitre 10
+
+text_input = st.text_input("Enter Mitre 10 text here:")
+if len(text_input) > 1:
+    text_input = text_input.replace('Auto-Kolone', 'CRC Auto-Kolone')
+    text_input = text_input.split('CRC')[0::2][1:]
+
+    names = [i.split('$')[0].strip() for i in text_input]
+    prices =[]
+    
+    for i in text_input:
+      try:
+        price = int(i.split('$')[1].split(' ')[0])/100
+        prices.append(price)
+      except:
+        prices.append(' ')
+
+    data = pd.DataFrame()
+    data['Item Description'] = names
+    data['Price'] = prices
 
     st.dataframe(data)
 
