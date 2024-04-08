@@ -715,8 +715,8 @@ if select_text == "Tool Kit Depot":
 ######################################################
 ######## Repco
 
-if select_text == "Sydney Tools":
-    text_input = st.text_input("Enter Sydney tools text here:")
+if select_text == "Repco":
+    text_input = st.text_input("Enter Repco text here:")
     remove_list = [' 3-7 Days Delivery 3-7 Days ', ' 30min C&C Delivery Same Day* ', ' 1-3 Days Delivery 1-3 Days ']
     
     for i in remove_list:
@@ -897,7 +897,7 @@ if select_text == "Auto One":
 ######## Tools.com
 
 if select_text == "Tools.com":
-    text_input = st.text_input("Enter Auto One text here:")
+    text_input = st.text_input("Enter Tools.com text here:")
     if len(text_input) > 1:
         products = [i.strip() for i in text_input.split(' Add To cart')][:-1]
 
