@@ -609,8 +609,8 @@ def on_button_click_AU_Anaconda():
       products.append(json.loads(temp))
     
     names = [i['name'] for i in products]
-    prices = [i['price']['toPrice'] for i in products]
-    first_prices = [i['price']['toRegPrice'] for i in products]
+    prices = [i['price']['toPrice'].replace('$','') for i in products]
+    first_prices = [i['price']['toRegPrice'].replace('$','') for i in products]
     links = [i['variantUrl'] for i in products]
     
     data = pd.DataFrame()
