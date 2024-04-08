@@ -727,3 +727,35 @@ if len(text_input) > 1:
 
 else:
     pass
+
+######################################################
+######## Autobarn
+
+text_input = st.text_input("Enter Autobarn text here:")
+if len(text_input) > 1:
+    text_input = text_input.replace('GDI IVD Intake Valve Cleaner', 'GDI IVD Intake Valve Cleaner - 5319')
+
+    text_input = text_input.split('CRC')[1:]
+    
+    names = [i.split(' - ')[0].strip() for i in text_input]
+    CRC_codes = [i.split(' - ')[1].split(' ')[0] for i in text_input]
+    prices = [i.split('$')[1].split(' ')[0] for i in text_input]
+    
+    first_prices = []
+    
+    for i in text_input:
+      try:
+        first_prices.append(i.split('$')[2].split(' ')[0])
+      except:
+        first_prices.append('')
+    
+    data = pd.DataFrame()
+    data['Item Description'] = names
+    data['CRC Codes'] = CRC_codes
+    data['Price'] = prices
+    data['First Price'] = first_prices
+    
+    st.dataframe(data)
+
+else:
+    pass
