@@ -719,11 +719,13 @@ if select_text == "Repco":
     text_input = st.text_input("Enter Repco text here:")
     if len(text_input) > 1:
         remove_list = [' 3-7 Days Delivery 3-7 Days ', ' 30min C&C Delivery Same Day* ', ' 1-3 Days Delivery 1-3 Days ']
-        
+
         for i in remove_list:
           text_input = text_input.replace(i,'')
         
-        list1 = text_input.split('In-Store')
+        text_input = text_input.replace('store finder icon Click to find in nearby store Not in stock at selected store.','In-Store')
+        
+        list1 = text_input.split('In-Store')[:-1]
         list1 = [i.split(' - ')[1:3] for i in list1]
         
         names = [i[0] for i in list1]
