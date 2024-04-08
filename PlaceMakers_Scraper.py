@@ -548,6 +548,30 @@ def on_button_click_AU_Super():
     #merged_data = data1.merge(data, on='CRC Code', how='left').fillna("")
     #st.dataframe(merged_data)
 
+##########
+# AU - BFC
+##########
+
+def on_button_click_AU_BFC():
+    st.write("Scrapping started")
+    
+    url = 'https://www.bcf.com.au/search?prefn1=brand&prefv1=ADOS%7CCRC&sz=60'
+    response = requests.get(url)
+    
+    results = int(response.text.split('Showing\n<span>\n\n1 - ')[1].split(' ')[0])
+    
+    names = [response.text.split('.html" title="Go to Product: ')[i].split('"')[0] for i in range(1,results + 1)]
+    prices = [response.text.split('title="product-sales-price">')[i].replace('\r\n','').split('<sup>')[0].strip().replace('$','') for i in range(1,results + 1)]
+    
+    data = pd.DataFrame()
+    
+    data['Item Description'] = names
+    data['Price'] = prices
+
+    st.dataframe(data)
+
+
+
 
 if st.button("NZ - Scrape PlaceMakers"):
     on_button_click_Place()
@@ -568,6 +592,9 @@ if st.button("AU - Scrape The Total Tools"):
 
 if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
+
+if st.button("AU - Scrape BCF"):
+    on_button_click_AU_BFC()
 
 
 select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn"])
