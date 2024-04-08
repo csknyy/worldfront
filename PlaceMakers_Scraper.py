@@ -650,7 +650,7 @@ if st.button("AU - Scrape Anaconda"):
     on_button_click_AU_Anaconda()
 
 
-select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC"])
+select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC", "Auto One"])
 
 
 ######################################################
@@ -849,3 +849,17 @@ if select_text == "BFC":
         data['Price'] = prices
 
         st.dataframe(data)
+
+if select_text == "Auto One":
+    text_input = st.text_input("Enter Auto One text here:")
+    if len(text_input) > 1:
+        text_input = text_input.replace('(PICKUP ONLY) ', '')
+        prices = [i.split(' ')[-1].replace('$','') for i in text_input.split(' ADD TO CART Add to Compare')[:-1]]
+        CRC_codes = [i.split(' ')[-2] for i in text_input.split(' ADD TO CART Add to Compare')[:-1]]
+
+        data = pd.DataFrame()
+        data['CRC Code'] = CRC_codes
+        data['Price'] = prices
+
+        st.dataframe(data)
+
