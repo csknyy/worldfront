@@ -806,9 +806,6 @@ if select_text == "BFC":
         names = [i.split('$')[0].strip() for i in text_input]
         prices = [i.split('$')[1].split(' ')[0] for i in text_input]
         
-        names
-        prices
-        
         data = pd.DataFrame()
         data['Item Description'] = names
         data['Price'] = prices
