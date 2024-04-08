@@ -720,6 +720,11 @@ if select_text == "Repco":
     if len(text_input) > 1:
         remove_list = [' 3-7 Days Delivery 3-7 Days ', ' 30min C&C Delivery Same Day* ', ' 1-3 Days Delivery 1-3 Days ']
 
+        try:
+          text_input = text_input.replace('CRC Belt Dressing 350G/500Ml' , 'CRC Belt Dressing 350G/500Ml - 1753472')
+        except:
+          pass
+
         for i in remove_list:
           text_input = text_input.replace(i,'')
         
