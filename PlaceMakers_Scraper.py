@@ -554,9 +554,12 @@ def on_button_click_AU_Super():
 
 def on_button_click_AU_BFC():
     st.write("Scrapping started")
-    
+
     import json
 
+    url = 'https://www.bcf.com.au/search?prefn1=brand&prefv1=ADOS%7CCRC&sz=60'
+    response = requests.get(url)
+    
     results = int(response.text.split('Showing\n<span>\n\n1 - ')[1].split(' ')[0])
     
     item_links = []
