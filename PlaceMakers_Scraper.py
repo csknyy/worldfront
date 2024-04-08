@@ -644,8 +644,8 @@ if st.button("AU - Scrape Super Cheap Auto"):
 if st.button("AU - Scrape BCF"):
     on_button_click_AU_BFC()
 
-if st.button("AU - Scrape BCF"):
-    on_button_click_AU_BFC()
+if st.button("AU - Scrape Anaconda"):
+    on_button_click_AU_Anaconda()
 
 
 select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC"])
