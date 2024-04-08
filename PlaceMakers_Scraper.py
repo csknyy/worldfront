@@ -587,6 +587,39 @@ def on_button_click_AU_BFC():
 
     st.dataframe(data)
 
+##########
+# AU - Anaconda
+##########
+
+def on_button_click_AU_Anaconda():
+    st.write("Scrapping started")
+
+    import json
+    
+    url = 'https://www.anacondastores.com/search?q=crc:relevance:brand:crc'
+
+    response = requests.get(url)
+    
+    products = []
+    
+    for i in range(1,results+1):
+      temp = response.text.split("data-variantdata=\'")[i].split("\n")[0]
+      products.append(json.loads(temp))
+    
+    names = [i['name'] for i in products]
+    prices = [i['price']['toPrice'] for i in products]
+    first_prices = [i['price']['toRegPrice'] for i in products]
+    links = [i['variantUrl'] for i in products]
+    
+    data = pd.DataFrame()
+    
+    data['Item Description'] = names
+    data['Price'] = prices
+    data['First Price'] = first_prices
+    data['Link'] = links
+
+    st.dataframe(data)
+
 
 if st.button("NZ - Scrape PlaceMakers"):
     on_button_click_Place()
@@ -607,6 +640,9 @@ if st.button("AU - Scrape The Total Tools"):
 
 if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
+
+if st.button("AU - Scrape BCF"):
+    on_button_click_AU_BFC()
 
 if st.button("AU - Scrape BCF"):
     on_button_click_AU_BFC()
