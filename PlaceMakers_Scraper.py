@@ -717,24 +717,25 @@ if select_text == "Tool Kit Depot":
 
 if select_text == "Repco":
     text_input = st.text_input("Enter Repco text here:")
-    remove_list = [' 3-7 Days Delivery 3-7 Days ', ' 30min C&C Delivery Same Day* ', ' 1-3 Days Delivery 1-3 Days ']
+    if len(text_input) > 1:
+        remove_list = [' 3-7 Days Delivery 3-7 Days ', ' 30min C&C Delivery Same Day* ', ' 1-3 Days Delivery 1-3 Days ']
+        
+        for i in remove_list:
+          text_input = text_input.replace(i,'')
+        
+        list1 = text_input.split('In-Store')
+        list1 = [i.split(' - ')[1:3] for i in list1]
+        
+        names = [i[0] for i in list1]
+        CRC_codes = [i[1].split('$')[0].strip() for i in list1]
+        prices = [i[1].split('$')[1].split(' ')[0] for i in list1]
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['CRC Codes'] = CRC_codes
+        data['Price'] = prices
     
-    for i in remove_list:
-      text_input = text_input.replace(i,'')
-    
-    list1 = text_input.split('In-Store')
-    list1 = [i.split(' - ')[1:3] for i in list1]
-    
-    names = [i[0] for i in list1]
-    CRC_codes = [i[1].split('$')[0].strip() for i in list1]
-    prices = [i[1].split('$')[1].split(' ')[0] for i in list1]
-    
-    data = pd.DataFrame()
-    data['Item Description'] = names
-    data['CRC Codes'] = CRC_codes
-    data['Price'] = prices
-
-    st.dataframe(data)
+        st.dataframe(data)
 
 ######################################################
 ######## Sydney Tools
