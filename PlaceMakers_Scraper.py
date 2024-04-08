@@ -612,7 +612,7 @@ if st.button("AU - Scrape BCF"):
     on_button_click_AU_BFC()
 
 
-select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn"])
+select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC"])
 
 
 ######################################################
@@ -796,4 +796,21 @@ if select_text == "Autobarn":
         data['Price'] = prices
         data['First Price'] = first_prices
         
+        st.dataframe(data)
+
+if select_text == "BFC":
+    text_input = st.text_input("Enter BFC text here:")
+    if len(text_input) > 1:
+        text_input = text_input.split(', , bcf_hi-res ')[1:]
+
+        names = [i.split('$')[0].strip() for i in text_input]
+        prices = [i.split('$')[1].split(' ')[0] for i in text_input]
+        
+        names
+        prices
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['Price'] = prices
+
         st.dataframe(data)
