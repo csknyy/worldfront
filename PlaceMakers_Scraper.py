@@ -846,7 +846,9 @@ if select_text == "Autobarn":
     if len(text_input) > 1:
         text_input = text_input.replace('GDI IVD Intake Valve Cleaner', 'GDI IVD Intake Valve Cleaner - 5319')
         text_input = text_input.replace('CRC Moto Plastic Polish 200mL- 1752430', 'CRC Moto Plastic Polish 200mL - 1752430')
-    
+        text_input = text_input.replace('CRC Auto AC Pro Cleaner 500mL- 1753204', 'CRC Auto AC Pro Cleaner 500mL - 1753204')
+        text_input = text_input.replace('CRC Moto Metal Polish 200mL- 1752436', 'CRC Moto Metal Polish 200mL - 1752436')
+
         text_input = text_input.split('CRC')[1:]
         
         names = [i.split(' - ')[0].strip() for i in text_input]
