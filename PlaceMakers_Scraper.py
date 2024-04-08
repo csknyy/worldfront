@@ -570,192 +570,188 @@ if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
 
 
+select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn"])
+
+
 ######################################################
 ######## Tool Kit Depot
 
-text_input = st.text_input("Enter Tool Kit Depot text here:")
-if len(text_input) > 1:
-    list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
-    list1 = [i.replace('CRC ','') for i in list1]
-    list2 = []
-    
-    for i in range(len(list1)):
-      if list1[i][0] == '$':
-        try:
-          list2.append(list1[i].split(' - ')[0][list1[i].index('.')+3:] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
-        except:
-          pass
-      else:
-        list2.append(list1[i].split(' - ')[0] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
-    
-    list2 = [i.strip() for i in list2]
-    
-    for i in range(len(list2)):
-      if 'Features:' in list2[i]:
-        temp = list2[i]
-        list2[i] = temp.split(' Features:')[0] + ' - ' + temp.split(' - ')[-1]
-    
-    list3 = []
-    
-    for text in list2:
-      text = text.replace('CR', '- CR')
-      if "CR" in text:
-        CR_index = text.find('CR')+9
-        temp = text[:CR_index]
-      else:
-        temp = text
-    
-      value_index = text.find('$')
-    
-      while temp[-1].isdigit() == False:
-        temp = temp[:-1]
-    
-      temp = temp.replace(' - - ', ' - ')
-      temp = temp.replace(' - CR', ' - ')
-    
-      if "$" in temp:
-        list3.append(temp)
-      else:
-        list3.append(temp + ' - ' + text[value_index:])
-    
-    data_split = [item.split(" - ") for item in list3]
-    
-    data = pd.DataFrame(data_split, columns=["Item Description", "CRC Code", "Price"])
-    
-    data['Price'] = [float(i.replace('$','')) for i in data['Price']]
-    
-    data['TKD Club Price'] = (data['Price'] * 0.975).round(2)
-    
-    st.dataframe(data)
+if select_text == "Tool Kit Depot":
+    text_input = st.text_input("Enter Tool Kit Depot text here:")
+    if len(text_input) > 1:
+        list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
+        list1 = [i.replace('CRC ','') for i in list1]
+        list2 = []
+        
+        for i in range(len(list1)):
+          if list1[i][0] == '$':
+            try:
+              list2.append(list1[i].split(' - ')[0][list1[i].index('.')+3:] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
+            except:
+              pass
+          else:
+            list2.append(list1[i].split(' - ')[0] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
+        
+        list2 = [i.strip() for i in list2]
+        
+        for i in range(len(list2)):
+          if 'Features:' in list2[i]:
+            temp = list2[i]
+            list2[i] = temp.split(' Features:')[0] + ' - ' + temp.split(' - ')[-1]
+        
+        list3 = []
+        
+        for text in list2:
+          text = text.replace('CR', '- CR')
+          if "CR" in text:
+            CR_index = text.find('CR')+9
+            temp = text[:CR_index]
+          else:
+            temp = text
+        
+          value_index = text.find('$')
+        
+          while temp[-1].isdigit() == False:
+            temp = temp[:-1]
+        
+          temp = temp.replace(' - - ', ' - ')
+          temp = temp.replace(' - CR', ' - ')
+        
+          if "$" in temp:
+            list3.append(temp)
+          else:
+            list3.append(temp + ' - ' + text[value_index:])
+        
+        data_split = [item.split(" - ") for item in list3]
+        
+        data = pd.DataFrame(data_split, columns=["Item Description", "CRC Code", "Price"])
+        
+        data['Price'] = [float(i.replace('$','')) for i in data['Price']]
+        
+        data['TKD Club Price'] = (data['Price'] * 0.975).round(2)
+        
+        st.dataframe(data)
 
 ######################################################
 ######## Sydney Tools
 
-text_input = st.text_input("Enter Sydney tools text here:")
-if len(text_input) > 1:
-    test_list = text_input.split("CRC ")[::3][1:]
-
-    new_list,indexes = [],[]
+if select_text == "Sydney Tools":
+    text_input = st.text_input("Enter Sydney tools text here:")
+    if len(text_input) > 1:
+        test_list = text_input.split("CRC ")[::3][1:]
     
-    for i in range(len(test_list)):
-      temp = test_list[i].strip()
-      check = [ "FREE SHIPPING", "Clearance"]
-      for word in check:
-        if word in temp:
-          indexes.append([i+1,word])
-          temp = test_list[i].replace(word,"")
-      new_list.append(temp.strip())
+        new_list,indexes = [],[]
+        
+        for i in range(len(test_list)):
+          temp = test_list[i].strip()
+          check = [ "FREE SHIPPING", "Clearance"]
+          for word in check:
+            if word in temp:
+              indexes.append([i+1,word])
+              temp = test_list[i].replace(word,"")
+          new_list.append(temp.strip())
+        
+        crc_codes = [i.split(" ")[0] for i in new_list]
+        prices = [i.split(" ")[-1] for i in new_list]
+        names = [' '.join(i.split(" ")[1:-1]) for i in new_list]
+        
+        data = pd.DataFrame()
+        
+        data['CRC Code'] = crc_codes
+        data['Item Description'] = names
+        data['Price'] = prices
+        
+        data['Flag'] = ''
+        
+        for ind in indexes: 
+          data['Flag'][ind[0]] = ind[1]
     
-    crc_codes = [i.split(" ")[0] for i in new_list]
-    prices = [i.split(" ")[-1] for i in new_list]
-    names = [' '.join(i.split(" ")[1:-1]) for i in new_list]
-    
-    data = pd.DataFrame()
-    
-    data['CRC Code'] = crc_codes
-    data['Item Description'] = names
-    data['Price'] = prices
-    
-    data['Flag'] = ''
-    
-    for ind in indexes: 
-      data['Flag'][ind[0]] = ind[1]
-
-    st.dataframe(data)
-    
-else:
-    pass
+        st.dataframe(data)
 
 ######################################################
 ######## Atom Supply
 
-text_input = st.text_input("Enter Atom Supply text here:")
-if len(text_input) > 1:
-    text_input = text_input.replace('More information','Add to Cart').replace('Missing Price','$')
-
-    products = [i.strip() for i in text_input.split(' Add to Cart Add to Compare')][:-1]
+if select_text == "Atom Supply":
+    text_input = st.text_input("Enter Atom Supply text here:")
+    if len(text_input) > 1:
+        text_input = text_input.replace('More information','Add to Cart').replace('Missing Price','$')
     
-    names = []
-    for i in products:
-      if len(i.split('CRC')[0])>0:
-        names.append(i.split('CRC')[0].strip())
-      else:
-        try:
-          names.append(i.split('CRC')[1].strip())
-        except:
-          pass
+        products = [i.strip() for i in text_input.split(' Add to Cart Add to Compare')][:-1]
+        
+        names = []
+        for i in products:
+          if len(i.split('CRC')[0])>0:
+            names.append(i.split('CRC')[0].strip())
+          else:
+            try:
+              names.append(i.split('CRC')[1].strip())
+            except:
+              pass
+        
+        ATOM_SKU = [i.split('ATOM Code: ')[1].split(' ')[0] for i in products]
+        first_price = [i.split('$')[1].split(' ')[0] for i in products]
+        actual_price = [i.split('$')[2].split(' ')[0] for i in products]
+        
+        data = pd.DataFrame()
+        
+        data['ATOM_SKU'] = ATOM_SKU
+        data['Item Description'] = names
+        data['First Price'] = first_price
+        data['Actual Price'] = actual_price
     
-    ATOM_SKU = [i.split('ATOM Code: ')[1].split(' ')[0] for i in products]
-    first_price = [i.split('$')[1].split(' ')[0] for i in products]
-    actual_price = [i.split('$')[2].split(' ')[0] for i in products]
-    
-    data = pd.DataFrame()
-    
-    data['ATOM_SKU'] = ATOM_SKU
-    data['Item Description'] = names
-    data['First Price'] = first_price
-    data['Actual Price'] = actual_price
-
-    st.dataframe(data)
-
-else:
-    pass
-
+        st.dataframe(data)
+        
 ######################################################
 ######## Mitre 10
 
-text_input = st.text_input("Enter Mitre 10 text here:")
-if len(text_input) > 1:
-    text_input = text_input.replace('Auto-Kolone', 'CRC Auto-Kolone')
-    text_input = text_input.split('CRC')[0::2][1:]
-
-    names = [i.split('$')[0].strip() for i in text_input]
-    prices =[]
+if select_text == "Mitre 10":
+    text_input = st.text_input("Enter Mitre 10 text here:")
+    if len(text_input) > 1:
+        text_input = text_input.replace('Auto-Kolone', 'CRC Auto-Kolone')
+        text_input = text_input.split('CRC')[0::2][1:]
     
-    for i in text_input:
-      try:
-        price = int(i.split('$')[1].split(' ')[0])/100
-        prices.append(price)
-      except:
-        prices.append(' ')
-
-    data = pd.DataFrame()
-    data['Item Description'] = names
-    data['Price'] = prices
-
-    st.dataframe(data)
-
-else:
-    pass
+        names = [i.split('$')[0].strip() for i in text_input]
+        prices =[]
+        
+        for i in text_input:
+          try:
+            price = int(i.split('$')[1].split(' ')[0])/100
+            prices.append(price)
+          except:
+            prices.append(' ')
+    
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['Price'] = prices
+    
+        st.dataframe(data)
 
 ######################################################
 ######## Autobarn
 
-text_input = st.text_input("Enter Autobarn text here:")
-if len(text_input) > 1:
-    text_input = text_input.replace('GDI IVD Intake Valve Cleaner', 'GDI IVD Intake Valve Cleaner - 5319')
-
-    text_input = text_input.split('CRC')[1:]
+if select_text == "Autobarn":
+    text_input = st.text_input("Enter Autobarn text here:")
+    if len(text_input) > 1:
+        text_input = text_input.replace('GDI IVD Intake Valve Cleaner', 'GDI IVD Intake Valve Cleaner - 5319')
     
-    names = [i.split(' - ')[0].strip() for i in text_input]
-    CRC_codes = [i.split(' - ')[1].split(' ')[0] for i in text_input]
-    prices = [i.split('$')[1].split(' ')[0] for i in text_input]
-    
-    first_prices = []
-    
-    for i in text_input:
-      try:
-        first_prices.append(i.split('$')[2].split(' ')[0])
-      except:
-        first_prices.append('')
-    
-    data = pd.DataFrame()
-    data['Item Description'] = names
-    data['CRC Codes'] = CRC_codes
-    data['Price'] = prices
-    data['First Price'] = first_prices
-    
-    st.dataframe(data)
-
-else:
-    pass
+        text_input = text_input.split('CRC')[1:]
+        
+        names = [i.split(' - ')[0].strip() for i in text_input]
+        CRC_codes = [i.split(' - ')[1].split(' ')[0] for i in text_input]
+        prices = [i.split('$')[1].split(' ')[0] for i in text_input]
+        
+        first_prices = []
+        
+        for i in text_input:
+          try:
+            first_prices.append(i.split('$')[2].split(' ')[0])
+          except:
+            first_prices.append('')
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['CRC Codes'] = CRC_codes
+        data['Price'] = prices
+        data['First Price'] = first_prices
+        
+        st.dataframe(data)
