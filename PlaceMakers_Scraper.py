@@ -555,24 +555,34 @@ def on_button_click_AU_Super():
 def on_button_click_AU_BFC():
     st.write("Scrapping started")
     
-    url = 'https://www.bcf.com.au/search?prefn1=brand&prefv1=ADOS%7CCRC&sz=60'
-    response = requests.get(url)
+    import json
 
-    st.write(response.text)
-    
     results = int(response.text.split('Showing\n<span>\n\n1 - ')[1].split(' ')[0])
     
-    names = [response.text.split('.html" title="Go to Product: ')[i].split('"')[0] for i in range(1,results + 1)]
-    prices = [response.text.split('title="product-sales-price">')[i].replace('\r\n','').split('<sup>')[0].strip().replace('$','') for i in range(1,results + 1)]
-
+    item_links = []
+    
+    for i in range(1, results+1):
+      item_links.append("https://www.bcf.com.au" + response.text.split(' class="name-link" href="')[i].split('"')[0])
+    
+    products = []
+    
+    for i in item_links:
+      url = i
+      response_temp = requests.get(url)
+      temp = response_temp.text.split('{"ecommerce":{"email":"","detail":{"products":')[1].split('}}}')[0]
+      products.append(json.loads(temp))
+    
+    ids = [i[0]['id'] for i in products]
+    names = [i[0]['name'] for i in products]
+    prices = [i[0]['price'] for i in products]
+    
     data = pd.DataFrame()
     
+    data['BCF SKU'] = ids
     data['Item Description'] = names
     data['Price'] = prices
 
     st.dataframe(data)
-
-
 
 
 if st.button("NZ - Scrape PlaceMakers"):
