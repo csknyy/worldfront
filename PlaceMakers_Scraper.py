@@ -601,6 +601,8 @@ def on_button_click_AU_Anaconda():
     response = requests.get(url)
     
     products = []
+
+    results = len(response.text.split("data-variantdata=\'")) - 1
     
     for i in range(1,results+1):
       temp = response.text.split("data-variantdata=\'")[i].split("\n")[0]
