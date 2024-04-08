@@ -845,6 +845,9 @@ if select_text == "Autobarn":
     text_input = st.text_input("Enter Autobarn text here:")
     if len(text_input) > 1:
         text_input = text_input.replace('GDI IVD Intake Valve Cleaner', 'GDI IVD Intake Valve Cleaner - 5319')
+        text_input = text_input.replace('CRC Moto Plastic Polish 200mL- 1752430', 'CRC Moto Plastic Polish 200mL - 1752430')
+
+        CRC Moto Plastic Polish 200mL- 1752430
     
         text_input = text_input.split('CRC')[1:]
         
