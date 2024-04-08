@@ -650,7 +650,7 @@ if st.button("AU - Scrape Anaconda"):
     on_button_click_AU_Anaconda()
 
 
-select_text = st.radio("Select customer",["Tool Kit Depot", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC", "Auto One", "Tools.com"])
+select_text = st.radio("Select customer",["Tool Kit Depot", "Repco", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC", "Auto One", "Tools.com"])
 
 
 ######################################################
@@ -711,6 +711,30 @@ if select_text == "Tool Kit Depot":
         data['TKD Club Price'] = (data['Price'] * 0.975).round(2)
         
         st.dataframe(data)
+
+######################################################
+######## Repco
+
+if select_text == "Sydney Tools":
+    text_input = st.text_input("Enter Sydney tools text here:")
+    remove_list = [' 3-7 Days Delivery 3-7 Days ', ' 30min C&C Delivery Same Day* ', ' 1-3 Days Delivery 1-3 Days ']
+    
+    for i in remove_list:
+      text_input = text_input.replace(i,'')
+    
+    list1 = text_input.split('In-Store')
+    list1 = [i.split(' - ')[1:3] for i in list1]
+    
+    names = [i[0] for i in list1]
+    CRC_codes = [i[1].split('$')[0].strip() for i in list1]
+    prices = [i[1].split('$')[1].split(' ')[0] for i in list1]
+    
+    data = pd.DataFrame()
+    data['Item Description'] = names
+    data['CRC Codes'] = CRC_codes
+    data['Price'] = prices
+
+    st.dataframe(data)
 
 ######################################################
 ######## Sydney Tools
@@ -836,6 +860,9 @@ if select_text == "Autobarn":
         
         st.dataframe(data)
 
+######################################################
+######## BFC
+
 if select_text == "BFC":
     text_input = st.text_input("Enter BFC text here:")
     if len(text_input) > 1:
@@ -850,6 +877,9 @@ if select_text == "BFC":
 
         st.dataframe(data)
 
+######################################################
+######## Auto One
+
 if select_text == "Auto One":
     text_input = st.text_input("Enter Auto One text here:")
     if len(text_input) > 1:
@@ -862,6 +892,9 @@ if select_text == "Auto One":
         data['Price'] = prices
 
         st.dataframe(data)
+
+######################################################
+######## Tools.com
 
 if select_text == "Tools.com":
     text_input = st.text_input("Enter Auto One text here:")
