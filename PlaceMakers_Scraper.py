@@ -557,13 +557,13 @@ def on_button_click_AU_BFC():
     
     url = 'https://www.bcf.com.au/search?prefn1=brand&prefv1=ADOS%7CCRC&sz=60'
     response = requests.get(url)
+
+    st.write(response.text)
     
     results = int(response.text.split('Showing\n<span>\n\n1 - ')[1].split(' ')[0])
     
     names = [response.text.split('.html" title="Go to Product: ')[i].split('"')[0] for i in range(1,results + 1)]
-    st.write(names)
     prices = [response.text.split('title="product-sales-price">')[i].replace('\r\n','').split('<sup>')[0].strip().replace('$','') for i in range(1,results + 1)]
-    st.write(prices)
 
     data = pd.DataFrame()
     
