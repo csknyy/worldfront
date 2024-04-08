@@ -643,8 +643,8 @@ if st.button("AU - Scrape The Total Tools"):
 if st.button("AU - Scrape Super Cheap Auto"):
     on_button_click_AU_Super()
 
-if st.button("AU - Scrape BCF"):
-    on_button_click_AU_BFC()
+#if st.button("AU - Scrape BCF"):
+#    on_button_click_AU_BFC()
 
 if st.button("AU - Scrape Anaconda"):
     on_button_click_AU_Anaconda()
