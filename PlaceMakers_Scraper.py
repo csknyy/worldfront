@@ -561,8 +561,10 @@ def on_button_click_AU_BFC():
     results = int(response.text.split('Showing\n<span>\n\n1 - ')[1].split(' ')[0])
     
     names = [response.text.split('.html" title="Go to Product: ')[i].split('"')[0] for i in range(1,results + 1)]
+    st.write(names)
     prices = [response.text.split('title="product-sales-price">')[i].replace('\r\n','').split('<sup>')[0].strip().replace('$','') for i in range(1,results + 1)]
-    
+    st.write(prices)
+
     data = pd.DataFrame()
     
     data['Item Description'] = names
