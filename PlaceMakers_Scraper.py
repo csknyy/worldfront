@@ -635,7 +635,7 @@ if st.button("NZ - Scrape The Warehouse"):
 if st.button("NZ - Scrape The ToolShed"):
     on_button_click_ToolShed()
 
-select_text = st.radio("Select customer",["Bunnings"])
+select_text = st.radio("Select customer",["Bunnings","Mitre 10"])
 
 ######################################################
 ######## Bunnings
@@ -658,6 +658,32 @@ if select_text == "Bunnings":
         data['Price flag'] = price_flags
         data['Price'] = prices
 
+        st.dataframe(data)
+
+######################################################
+######## Mitre 10
+
+if select_text == "Mitre 10":
+    text_input = st.text_input("Enter Mitre 10 text here:")
+    if len(text_input) > 1:
+        names,SKUs,prices,RRPs = [],[],[],[]
+
+        for i in text_input.split(' Choose a store for availability '):
+          index = int((len(i.split(' ★')[0]) - 5)/2)
+          names.append(i.split(' ★')[0][:-index].strip())
+          SKUs.append(i.split('SKU: ')[1].split(' ')[0])
+          prices.append(i.split('$')[1].split('each')[0].replace(' ',''))
+          try:
+            RRPs.append(i.split('RRP $')[1])
+          except:
+            RRPs.append('')
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['Bunnings SKU'] = SKUs
+        data['Price'] = prices
+        data['First Price'] = RRPs
+        
         st.dataframe(data)
 
 st.markdown('---')
