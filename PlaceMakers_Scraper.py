@@ -672,7 +672,7 @@ if select_text == "Mitre 10":
           index = int((len(i.split(' ★')[0]) - 5)/2)
           names.append(i.split(' ★')[0][:-index].strip())
           SKUs.append(i.split('SKU: ')[1].split(' ')[0])
-          prices.append(i.split('$')[1].split('each')[0].replace(' ',''))
+          prices.append(float(i.split('$')[1].split('each')[0].replace(' ','')+'00'))
           try:
             RRPs.append(i.split('RRP $')[1])
           except:
