@@ -647,12 +647,15 @@ if select_text == "Bunnings":
         text_input = text_input.replace(' In-store only', '')
         names = []
         prices = []
+        price_flags = []
         for i in text_input.split('Compare')[1:]:
           names.append(i.split('CRC')[3].split(' (')[0].strip())
+          price_flags.append(i.split('CRC')[2].strip())
           prices.append(i.split('$')[1].strip())
         
         data = pd.DataFrame()
         data['Item Description'] = names
+        data['Price flag'] = price_flags
         data['Price'] = prices
 
         st.dataframe(data)
