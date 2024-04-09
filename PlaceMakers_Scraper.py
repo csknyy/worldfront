@@ -635,6 +635,28 @@ if st.button("NZ - Scrape The Warehouse"):
 if st.button("NZ - Scrape The ToolShed"):
     on_button_click_ToolShed()
 
+select_text = st.radio("Select customer",["Bunnings"])
+
+######################################################
+######## Bunnings
+
+if select_text == "Bunnings":
+    text_input = st.text_input("Enter Bunnings text here:")
+    if len(text_input) > 1:
+        text_input = text_input.replace('ADOS', 'CRC ADOS')
+        text_input = text_input.replace(' In-store only', '')
+        names = []
+        prices = []
+        for i in text_input.split('Compare')[1:]:
+          names.append(i.split('CRC')[3].split(' (')[0].strip())
+          prices.append(i.split('$')[1].strip())
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['Price'] = prices
+
+        st.dataframe(data)
+
 st.markdown('---')
 
 if st.button("AU - Scrape The Total Tools"):
