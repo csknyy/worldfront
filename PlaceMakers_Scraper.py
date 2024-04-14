@@ -643,8 +643,9 @@ select_text = st.radio("Select customer",["Bunnings","Mitre 10"])
 if select_text == "Bunnings":
     text_input = st.text_input("Enter Bunnings text here:")
     if len(text_input) > 1:
-        text_input = text_input.replace('ADOS', 'CRC ADOS')
-        text_input = text_input.replace(' In-store only', '')
+        replacements = {' In-store only': '', 'ADOS': 'CRC ADOS', '808 Silicone': 'CRC 808 Silicone', 'CRC 550ml CRC': 'CRC'}
+        for old, new in replacements.items():
+            text_input = text_input.replace(old, new)
         names = []
         prices = []
         price_flags = []
