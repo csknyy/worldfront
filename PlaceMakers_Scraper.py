@@ -682,7 +682,7 @@ if select_text == "Mitre 10":
         
         data = pd.DataFrame()
         data['Item Description'] = names
-        data['Bunnings SKU'] = SKUs
+        data['Mitre10 SKU'] = SKUs
         data['Price'] = prices
         data['First Price'] = RRPs
         
