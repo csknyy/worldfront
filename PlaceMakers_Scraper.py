@@ -668,6 +668,7 @@ if select_text == "Mitre 10":
     text_input = st.text_input("Enter Mitre 10 text here:")
     if len(text_input) > 1:
         names,SKUs,prices,RRPs = [],[],[],[]
+        text_input = text_input.replace('pack of 72','each')
 
         for i in text_input.split(' Choose a store for availability '):
           index = int((len(i.split(' ★')[0]) - 5)/2)
