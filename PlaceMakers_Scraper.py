@@ -755,21 +755,44 @@ if select_text == "Repco":
 if select_text == "Sydney Tools":
     text_input = st.text_input("Enter Sydney Tools text here:")
     if len(text_input) > 1:
-        products = text_input.split('W W ')[1::2]
 
-        names, CRC_codes, prices = [], [], []
-        
-        for i in products:
-          names.append(' '.join(i.split('$')[0].strip().split(' ')[3:]) + ' ' + i.split('$')[0].strip().split(' ')[2])
-          CRC_codes.append(i.split(' ')[1])
-          prices.append(i.split('$')[1].split(' ')[0])
-        
-        data = pd.DataFrame()
-        data['Item Description'] = names
-        data['CRC codes'] = CRC_codes
-        data['Price'] = prices
+    replacements = {'CRC 2085 350g CRC Zinc It': 'CRC 2085 350g Zinc It',
+                    'CRC 2089 400ml CRC Black Zinc': 'CRC 2089 400ml Black Zinc',
+                    'CRC 18418 1L CRC Rust Converter': 'CRC 18418 1L Rust Converter',
+                    'CRC 14610 425g CRC Rust Converter Aerosol': 'CRC 14610 425g Rust Converter Aerosol'}
+    
+    for old, new in replacements.items():
+        text_input = text_input.replace(old, new)
+    
+    test_list = text_input.split("CRC ")[::3][1:]
+    
+    new_list,indexes = [],[]
+    
+    for i in range(len(test_list)):
+      temp = test_list[i].strip()
+      check = [ "FREE SHIPPING", "Clearance"]
+      for word in check:
+        if word in temp:
+          indexes.append([i+1,word])
+          temp = test_list[i].replace(word,"")
+      new_list.append(temp.strip())
+    
+    crc_codes = [i.split(" ")[0] for i in new_list]
+    prices = [i.split(" ")[-1] for i in new_list]
+    names = [' '.join(i.split(" ")[1:-1]) for i in new_list]
+    
+    data = pd.DataFrame()
+    
+    data['CRC Code'] = crc_codes
+    data['Item Description'] = names
+    data['Price'] = prices
+    
+    data['Flag'] = ''
+    
+    for ind in indexes:
+      data['Flag'][ind[0]] = ind[1]
 
-        st.dataframe(data)
+    st.dataframe(data)
 
 st.markdown('---')
 
