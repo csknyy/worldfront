@@ -690,8 +690,10 @@ if select_text == "Mitre 10":
 
 ######################################################
 ######## The ToolShed
-if select_text == "The ToolShed":
-    replacements = {'5 Stars4 Stars3 Stars2 Stars1 Star ': '', ' Inc GST': ''}
+if select_text == "Mitre 10":
+    text_input = st.text_input("Enter Mitre 10 text here:")
+    if len(text_input) > 1:
+        replacements = {'5 Stars4 Stars3 Stars2 Stars1 Star ': '', ' Inc GST': ''}
 
     for old, new in replacements.items():
         text_input = text_input.replace(old, new)
@@ -712,7 +714,6 @@ if select_text == "The ToolShed":
     data['Price'] = prices
     
     st.dataframe(data)
-    
 
 st.markdown('---')
 
