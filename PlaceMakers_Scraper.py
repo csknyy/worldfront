@@ -635,7 +635,7 @@ if st.button("NZ - Scrape The Warehouse"):
 if st.button("NZ - Scrape The ToolShed"):
     on_button_click_ToolShed()
 
-select_text = st.radio("Select customer",["Bunnings", "Mitre 10", "The ToolShed"])
+select_text = st.radio("Select customer",["Bunnings", "Mitre 10", "The ToolShed", "Repco"])
 
 ######################################################
 ######## Bunnings
@@ -714,6 +714,33 @@ if select_text == "The ToolShed":
         data['Price'] = prices
 
         st.dataframe(data)
+
+######################################################
+######## Repco
+if select_text == "Repco":
+    text_input = st.text_input("Enter Repco text here:")
+    if len(text_input) > 1:
+        products = [i.strip() for i in text_input.split('CRC')[2::2]]
+
+        names, CRC_codes, prices, price_flags,first_prices = [], [], [], []
+        
+        for i in products:
+          names.append(i.split(' - ')[0])
+          CRC_codes.append(i.split(' - ')[1].split(' ')[0])
+          prices.append(i.split('$')[1].split(' ')[0])
+          try:
+            price_flags.append(' '.join(i.split('$')[1].split(' ')[1:]) + '$' + i.split('$')[2])
+          except:
+            price_flags.append('')
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['CRC codes'] = CRC_codes
+        data['Price'] = prices
+        data['Price flag'] = price_flags
+
+        st.dataframe(data)
+
 
 st.markdown('---')
 
