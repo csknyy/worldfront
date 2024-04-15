@@ -720,6 +720,9 @@ if select_text == "The ToolShed":
 if select_text == "Repco":
     text_input = st.text_input("Enter Repco text here:")
     if len(text_input) > 1:
+        text_input = text_input.replace(' Repco Petrol & Diesel Injector Cleaner Restore lost power and boost fuel economy when adding Repco Fuel Injector Cleaner next time you fill up. Shop Now ','')
+        text_input = text_input.replace('CRC Belt Dressing 350G/500Ml CRC Belt Dressing 350G/500Ml', 'CRC Belt Dressing 350G/500Ml CRC Belt Dressing 350G/500Ml - 1753472')
+
         products = [i.strip() for i in text_input.split('CRC')[2::2]]
 
         names, CRC_codes, prices, price_flags, first_prices = [], [], [], [], []
