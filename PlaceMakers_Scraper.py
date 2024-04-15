@@ -722,7 +722,7 @@ if select_text == "Repco":
     if len(text_input) > 1:
         products = [i.strip() for i in text_input.split('CRC')[2::2]]
 
-        names, CRC_codes, prices, price_flags,first_prices = [], [], [], []
+        names, CRC_codes, prices, price_flags, first_prices = [], [], [], [], []
         
         for i in products:
           names.append(i.split(' - ')[0])
