@@ -703,16 +703,16 @@ if select_text == "The ToolShed":
         names, CRC_codes, prices = [],[],[]
         
         for i in products:
-            ind = int((len(i.split(' ')) - 4) / 2)
-            names.append(' '.join(i.split(' ')[:ind]))
-            CRC_codes.append(i.split(' ')[ind*2])
-            prices.append(i.split('$')[1])
-    
+          ind = int((len(i.split(' ')) - 4) / 2)
+          names.append(' '.join(i.split(' ')[:ind]))
+          CRC_codes.append(i.split(' ')[ind*2])
+          prices.append(i.split('$')[1])
+        
         data = pd.DataFrame()
         data['Item Description'] = names
         data['CRC codes'] = CRC_codes
         data['Price'] = prices
-        
+
         st.dataframe(data)
 
 st.markdown('---')
