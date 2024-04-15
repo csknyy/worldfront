@@ -869,7 +869,7 @@ if select_text == "Repco":
         list1 = [i.split(' - ')[1:3] for i in list1]
         
         names = [i[0] for i in list1]
-        CRC_codes = [i[1].split('$')[0].strip() for i in list1]
+        CRC_codes = [i[1].split('$')[0].split('(')[0].strip() for i in list1]
         prices = [i[1].split('$')[1].split(' ')[0] for i in list1]
         
         data = pd.DataFrame()
