@@ -819,54 +819,31 @@ if select_text == "Tool Kit Depot":
     if len(text_input) > 1:
         list1 = [i.split(' DESCRIPTION: ')[0] for i in text_input.replace('Quick view ', '').split('... ')]
         list1 = [i.replace('CRC ','') for i in list1]
-        list2 = []
         
-        for i in range(len(list1)):
-          if list1[i][0] == '$':
-            try:
-              list2.append(list1[i].split(' - ')[0][list1[i].index('.')+3:] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
-            except:
-              pass
-          else:
-            list2.append(list1[i].split(' - ')[0] + " - CR" + list1[i].split('CR')[1] + " - " + list1[i+1][:list1[i+1].index('.')+3])
+        raw_prices = [i.split(' ')[0] for i in list1[1:]]
+        products = [list1[0]]
         
-        list2 = [i.strip() for i in list2]
+        for i in list1[1:-1]:
+          products.append(' '.join(i.split(' ')[1:]))
         
-        for i in range(len(list2)):
-          if 'Features:' in list2[i]:
-            temp = list2[i]
-            list2[i] = temp.split(' Features:')[0] + ' - ' + temp.split(' - ')[-1]
+        names = [i.split('CR')[0].split(' - ')[0].strip() for i in products]
+        CRC_codes = [i.split('CR')[1].split(' ')[0].strip() for i in products]
         
-        list3 = []
+        prices = [float(i.split('$')[1]) for i in raw_prices]
+        first_prices = []
+        for i in raw_prices:
+          try:
+            first_prices.append(float(i.split('$')[2]))
+          except:
+            first_prices.append('')
         
-        for text in list2:
-          text = text.replace('CR', '- CR')
-          if "CR" in text:
-            CR_index = text.find('CR')+9
-            temp = text[:CR_index]
-          else:
-            temp = text
         
-          value_index = text.find('$')
-        
-          while temp[-1].isdigit() == False:
-            temp = temp[:-1]
-        
-          temp = temp.replace(' - - ', ' - ')
-          temp = temp.replace(' - CR', ' - ')
-        
-          if "$" in temp:
-            list3.append(temp)
-          else:
-            list3.append(temp + ' - ' + text[value_index:])
-        
-        data_split = [item.split(" - ") for item in list3]
-        
-        data = pd.DataFrame(data_split, columns=["Item Description", "CRC Code", "Price"])
-        
-        data['Price'] = [float(i.replace('$','')) for i in data['Price']]
-        
-        data['TKD Club Price'] = (data['Price'] * 0.975).round(2)
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['CRC Code'] = CRC_codes
+        data['Price'] = prices
+        data['First Price'] = first_prices
+        data['TKD Price'] = (data['Price'] * 0.975).round(2)
         
         st.dataframe(data)
 
