@@ -693,12 +693,12 @@ if select_text == "Mitre 10":
 if select_text == "The ToolShed":
     text_input = st.text_input("Enter The ToolShed text here:")
     if len(text_input) > 1:
-        replacements = {'5 Stars4 Stars3 Stars2 Stars1 Star ': '', ' Inc GST': ''}
+        replacements = {'5 Stars4 Stars3 Stars2 Stars1 Star ': '', ' Inc GST': '', 'ADD TO CART ': ''}
 
         for old, new in replacements.items():
             text_input = text_input.replace(old, new)
         
-        products = [i.strip() for i in text_input.split('MORE INFO ADD TO CART')[:-1]]
+        products = [i.strip() for i in text_input.split('MORE INFO')[:-1]]
         
         names, CRC_codes, prices = [],[],[]
         
