@@ -690,8 +690,8 @@ if select_text == "Mitre 10":
 
 ######################################################
 ######## The ToolShed
-if select_text == "Mitre 10":
-    text_input = st.text_input("Enter Mitre 10 text here:")
+if select_text == "The ToolShed":
+    text_input = st.text_input("Enter The ToolShed text here:")
     if len(text_input) > 1:
         replacements = {'5 Stars4 Stars3 Stars2 Stars1 Star ': '', ' Inc GST': ''}
 
