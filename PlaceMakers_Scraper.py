@@ -726,16 +726,20 @@ if select_text == "Repco":
 
         products = [i.strip() for i in text_input.split('CRC')[2::2]]
 
-        names, CRC_codes, prices, price_flags, first_prices = [], [], [], [], []
+        names, CRC_codes, prices, price_flags, price_flags1, price_flags2, first_prices = [], [], [], [], [], [], []
         
         for i in products:
           names.append(i.split(' - ')[0])
           CRC_codes.append(i.split(' - ')[1].split(' ')[0])
           prices.append(i.split('$')[1].split(' ')[0])
           try:
-            price_flags.append(' '.join(i.split('$')[1].split(' ')[1:]) + '$' + i.split('$')[2])
+            price_flags1.append(' '.join(i.split('$')[1].split(' ')[1:]) + '$' + i.split('$')[2])
           except:
-            price_flags.append('')
+            price_flags1.append('')
+        
+        price_flags2 = ['CLEARANCE' if i.strip().split(' ')[-1] == 'CLEARANCE' else '' for i in text_input.split('CRC')[1::2]]
+        for i,j in zip(price_flags1,price_flags2):
+          price_flags.append(i+j)
         
         data = pd.DataFrame()
         data['Item Description'] = names
