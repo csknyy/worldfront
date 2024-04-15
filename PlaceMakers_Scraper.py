@@ -723,6 +723,7 @@ if select_text == "Repco":
         text_input = text_input.replace(' Repco Petrol & Diesel Injector Cleaner Restore lost power and boost fuel economy when adding Repco Fuel Injector Cleaner next time you fill up. Shop Now ','')
         text_input = text_input.replace('CRC Belt Dressing 350G/500Ml CRC Belt Dressing 350G/500Ml', 'CRC Belt Dressing 350G/500Ml CRC Belt Dressing 350G/500Ml - 1753472')
         text_input = text_input.replace('ADOS', 'ADOS CRC')
+        text_input = text_input.replace('Contact Adhesive F2 Mp 75ml', 'CRC Contact Adhesive F2 Mp 75ml')
 
         products = [i.strip() for i in text_input.split('CRC')[2::2]]
 
