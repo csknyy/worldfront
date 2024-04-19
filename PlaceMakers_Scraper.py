@@ -851,7 +851,7 @@ if select_text == "Tool Kit Depot":
 ######################################################
 ######## Anaconda
 if select_text == "Anaconda":
-    text_input = st.text_input("Enter Repco text here:")
+    text_input = st.text_input("Enter Anaconda text here:")
     if len(text_input) > 1:
         products = [i.strip() for i in text_input.split('CRC')[1:]]
 
