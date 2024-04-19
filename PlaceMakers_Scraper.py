@@ -808,7 +808,7 @@ if st.button("AU - Scrape Anaconda"):
     on_button_click_AU_Anaconda()
 
 
-select_text = st.radio("Select customer",["Tool Kit Depot", "Repco", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC", "Auto One", "Tools.com"])
+select_text = st.radio("Select customer",["Tool Kit Depot", "Anaconda", "Repco", "Sydney Tools", "Atom Supply", "Mitre 10", "Autobarn", "BFC", "Auto One", "Tools.com"])
 
 
 ######################################################
@@ -845,6 +845,23 @@ if select_text == "Tool Kit Depot":
         data['First Price'] = first_prices
         data['TKD Price'] = (data['Price'] * 0.975).round(2)
         
+        st.dataframe(data)
+
+
+######################################################
+######## Anaconda
+if select_text == "Anaconda":
+    text_input = st.text_input("Enter Repco text here:")
+    if len(text_input) > 1:
+        products = [i.strip() for i in text_input.split('CRC')[1:]]
+
+        names = [i.split('(')[0].strip() for i in products]
+        prices = [i.split('$')[1].strip() for i in products]
+        
+        data = pd.DataFrame()
+        data['Item Description'] = names
+        data['Price'] = prices
+
         st.dataframe(data)
 
 ######################################################
