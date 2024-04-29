@@ -643,6 +643,7 @@ select_text = st.radio("Select customer",["Bunnings", "Mitre 10", "The ToolShed"
 if select_text == "Bunnings":
     text_input = st.text_input("Enter Bunnings text here:")
     if len(text_input) > 1:
+        text_input = text_input.replace('ADOS CRC Thinner Solvent N - 1L','ADOS Thinner Solvent N - 1L')
         replacements = {' In-store only': '', 'ADOS': 'CRC ADOS', '808 Silicone': 'CRC 808 Silicone', 'CRC 550ml CRC': 'CRC 500ml', 'CRC ADOS CRC ADOS': 'CRC CRC ADOS', 'CRC ADOS 1L CRC': 'CRC ADOS 1L'}
         for old, new in replacements.items():
             text_input = text_input.replace(old, new)
