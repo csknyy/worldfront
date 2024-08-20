@@ -14,13 +14,14 @@ files = [f"file{i}" for i in range(int(file_count))]
 i=0
 for uploaded_file,file in zip(uploaded_files,files):
     file = pd.read_csv(uploaded_file)
-    file = file.drop(df.columns[0], axis=1)
     files[i] = file
     st.write("Uploaded:", uploaded_file.name)
     i = i+1
 
 st.header("Concatenated dataframes")
 result = pd.concat(files)
+
+result = result.iloc[:, 1:]
 
 st.dataframe(result)
 
