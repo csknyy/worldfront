@@ -6,7 +6,7 @@ st.set_page_config(page_title="Concatenate files", layout="wide")
 def convert_df(df):
     return df.to_csv().encode('utf-8')
 
-uploaded_files = st.file_uploader("Choose the CSV files", accept_multiple_files=True, index = False)
+uploaded_files = st.file_uploader("Choose the CSV files", accept_multiple_files=True)
 file_count = len(uploaded_files)
 
 files = [f"file{i}" for i in range(int(file_count))]
