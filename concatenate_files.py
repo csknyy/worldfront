@@ -5,7 +5,7 @@ st.set_page_config(page_title="Concatenate files", layout="wide")
 
 
 def convert_df(df):
-    return df.to_csv().encode('utf-8')
+    return df.to_csv(index = False).encode('utf-8')
 
 #file_count = st.text_input('How many files?', '')
 
