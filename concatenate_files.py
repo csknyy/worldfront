@@ -24,7 +24,7 @@ for uploaded_file, file in zip(uploaded_files, files):
 st.header("Concatenated dataframes")
 result = pd.concat(files)
 
-result = result.iloc[:, 1:]
+result = result.iloc[:, :]
 
 st.dataframe(result)
 
